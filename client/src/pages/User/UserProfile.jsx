@@ -5,17 +5,8 @@ import {
   TextField,
   Button,
   Avatar,
-  Grid,
   Paper,
-  InputLabel,
-  MenuItem,
-  Select,
-  FormControl,
-  IconButton,
 } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import MailOutlineIcon from "@mui/icons-material/MailOutline";
-import AddIcon from "@mui/icons-material/Add";
 
 const UserProfile = () => {
   const [isChangePassword, setIsChangePassword] = useState(false);
@@ -48,12 +39,11 @@ const UserProfile = () => {
   return (
     <Box
       sx={{
-        
         bgcolor: "#f4f7f6",
         minHeight: "100vh",
         display: "flex",
         justifyContent: "center",
-        p: { xs: 2, sm: 4 }, 
+        p: { xs: 2, sm: 4 },
       }}
     >
       <Paper
@@ -65,11 +55,12 @@ const UserProfile = () => {
             display: "flex",
             justifyContent: "space-between",
             alignItems: { xs: "flex-start", sm: "center" },
-            
           }}
         >
           <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-            <Avatar sx={{ width: { xs: 60, sm: 80 }, height: { xs: 60, sm: 80 } }} />
+            <Avatar
+              sx={{ width: { xs: 60, sm: 80 }, height: { xs: 60, sm: 80 } }}
+            />
             <Box>
               <Typography variant="h6" fontWeight="bold">
                 Eyad Mansour
@@ -129,38 +120,42 @@ const UserProfile = () => {
         </Button>
 
         {isChangePassword && (
-        <>
-          <Box
-            sx={{
-              display: "grid",
-              gridTemplateColumns: {xs:'1fr',sm:'1fr 1fr'},
-              gap: "24px",
-              mt: 5,
-            }}
-          >
-            {Passwordfields.map((field, index) => (
-              <Box key={index}>
-                <Typography variant="body2" fontWeight="500" sx={{ mb: 1 }}>
-                  {field.label}
-                </Typography>
+          <>
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+                gap: "24px",
+                mt: 5,
+              }}
+            >
+              {Passwordfields.map((field, index) => (
+                <Box key={index}>
+                  <Typography variant="body2" fontWeight="500" sx={{ mb: 1 }}>
+                    {field.label}
+                  </Typography>
 
-                <TextField fullWidth placeholder="password" sx={inputStyles} />
-              </Box>
-            ))}
-          </Box>
-        <Button
-          sx={{
-            display:"flex",
-            mt: 3,
-            borderRadius: "8px",
-            textTransform: "none",
-            bgcolor: "#4f86f7",
-            color: "white",
-          }}
-        >
-          Save
-        </Button>
-        </>
+                  <TextField
+                    fullWidth
+                    placeholder="password"
+                    sx={inputStyles}
+                  />
+                </Box>
+              ))}
+            </Box>
+            <Button
+              sx={{
+                display: "flex",
+                mt: 3,
+                borderRadius: "8px",
+                textTransform: "none",
+                bgcolor: "#4f86f7",
+                color: "white",
+              }}
+            >
+              Save
+            </Button>
+          </>
         )}
       </Paper>
     </Box>

@@ -3,14 +3,11 @@ import {
   Button,
   TextField,
   Typography,
-  Container,
   Paper,
-  Stack,
   Tabs,
   Tab,
   InputAdornment,
   IconButton,
-  FormControlLabel,
   Link,
   Divider,
 } from "@mui/material";
@@ -22,10 +19,8 @@ import {
   Facebook,
   Google,
   Twitter,
-  CheckBox,
-  
 } from "@mui/icons-material";
-import PersonIcon from '@mui/icons-material/Person';
+import PersonIcon from "@mui/icons-material/Person";
 import { useNavigate } from "react-router-dom";
 
 function Register() {
