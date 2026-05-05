@@ -3,14 +3,11 @@ import {
   Button,
   TextField,
   Typography,
-  Container,
   Paper,
-  Stack,
   Tabs,
   Tab,
   InputAdornment,
   IconButton,
-  FormControlLabel,
   Link,
   Divider,
 } from "@mui/material";
@@ -22,7 +19,6 @@ import {
   Facebook,
   Google,
   Twitter,
-  CheckBox,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
@@ -36,8 +32,9 @@ function Login() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        padding: "0px",
-        background: "linear-gradient(135deg, #004a4a 0%, #16a34a15 100%)",      }}
+        p: { xs: 2, sm: 4 },
+        background: "linear-gradient(135deg, #004a4a 0%, #16a34a15 100%)",
+      }}
     >
       <Paper
         elevation={3}
@@ -45,13 +42,18 @@ function Login() {
           width: "100%",
           maxWidth: 400,
           borderRadius: 2,
-          padding: 4,
+          p: { xs: 3, sm: 5 },
           textAlign: "center",
         }}
       >
         <Typography
           variant="h5"
-          sx={{ fontWeight: "bold", mb: 2, color: "#444" }}
+          sx={{
+            fontWeight: "bold",
+            mb: 2,
+            color: "#444",
+            fontSize: { xs: "1.25rem", sm: "1.5rem" },
+          }}
         >
           Your Form
         </Typography>
