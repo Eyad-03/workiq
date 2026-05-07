@@ -46,12 +46,37 @@ function Register() {
           textAlign: "center",
         }}
       >
-        <Typography
-          variant="h5"
-          sx={{ fontWeight: "bold", mb: 2, color: "#444" }}
-        >
-          Your Form
-        </Typography>
+        <Box className="logo">
+          <Typography
+            variant="h3"
+            onClick={() => navigate("/")}
+            sx={{
+              // Base Typography Styles
+              mb: 2,
+              color: "black",
+              fontSize: "22px",
+              fontWeight: 800,
+              letterSpacing: "0.4px",
+              cursor: "pointer",
+              display: "inline-flex",
+              alignItems: "center",
+
+              // The Dot (Pseudo-element)
+              "&::after": {
+                content: '""',
+                display: "inline-block",
+                width: "8px",
+                height: "8px",
+                marginLeft: "10px",
+                borderRadius: "50%",
+                backgroundColor: "#4ee1c1",
+                boxShadow: "0 0 0 6px rgba(78, 225, 193, 0.12)",
+              },
+            }}
+          >
+            WorkiQ
+          </Typography>
+        </Box>
 
         <Tabs
           centered
