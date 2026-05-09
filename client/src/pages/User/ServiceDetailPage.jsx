@@ -14,7 +14,7 @@ import {
   Paper,
   Stack,
   Typography,
-} from '@mui/material';
+} from "@mui/material";
 
 import {
   CheckCircle,
@@ -22,82 +22,78 @@ import {
   FavoriteBorder,
   Language,
   LocationOn,
-} from '@mui/icons-material';
-import NavBar from '../../components/User/NavBar';
+} from "@mui/icons-material";
+import NavBar from "../../components/Shared/NavBar";
 
 export default function ServiceDetailPage() {
   const previousWorks = [
     {
       id: 1,
       image:
-        'https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1200&auto=format&fit=crop',
-      title: 'E-Commerce Dashboard',
-      category: 'Web Application',
+        "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1200&auto=format&fit=crop",
+      title: "E-Commerce Dashboard",
+      category: "Web Application",
     },
     {
       id: 2,
       image:
-        'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?q=80&w=1200&auto=format&fit=crop',
-      title: 'SaaS Landing Page',
-      category: 'UI/UX Design',
+        "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?q=80&w=1200&auto=format&fit=crop",
+      title: "SaaS Landing Page",
+      category: "UI/UX Design",
     },
     {
       id: 3,
       image:
-        'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1200&auto=format&fit=crop',
-      title: 'Task Management Platform',
-      category: 'Full Stack Development',
+        "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1200&auto=format&fit=crop",
+      title: "Task Management Platform",
+      category: "Full Stack Development",
     },
   ];
 
   const packages = [
     {
-      title: 'Basic',
-      price: '$149',
-      features: ['Responsive Design', '2 Pages', 'Basic SEO'],
+      title: "Basic",
+      price: "$149",
+      features: ["Responsive Design", "2 Pages", "Basic SEO"],
     },
     {
-      title: 'Standard',
-      price: '$299',
-      features: ['5 Pages', 'API Integration', 'Responsive UI'],
+      title: "Standard",
+      price: "$299",
+      features: ["5 Pages", "API Integration", "Responsive UI"],
     },
     {
-      title: 'Premium',
-      price: '$599',
-      features: ['Unlimited Pages', 'Dashboard', 'Priority Support'],
+      title: "Premium",
+      price: "$599",
+      features: ["Unlimited Pages", "Dashboard", "Priority Support"],
     },
   ];
 
   return (
-    <Box sx={{ background: '#f4f7fb', minHeight: '100vh', py: 20 }}>
-        <NavBar/>
+    <Box sx={{ background: "#f4f7fb", minHeight: "100vh", py: 20 }}>
       <Container maxWidth="xl">
-
         {/* TOP SECTION */}
         <Grid container spacing={4} alignItems="flex-start">
-
           {/* HERO */}
           <Grid item xs={12} lg={8}>
             <Card
               sx={{
                 borderRadius: 6,
-                overflow: 'hidden',
-                boxShadow: '0 20px 60px rgba(0,0,0,0.08)',
+                overflow: "hidden",
+                boxShadow: "0 20px 60px rgba(0,0,0,0.08)",
               }}
             >
               <Box
                 sx={{
                   minHeight: 540,
                   background:
-                    'linear-gradient(135deg,#5B6CFF 0%,#7F56D9 50%,#8B5CF6 100%)',
-                  position: 'relative',
+                    "linear-gradient(135deg,#5B6CFF 0%,#7F56D9 50%,#8B5CF6 100%)",
+                  position: "relative",
                   p: { xs: 3, md: 5 },
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
                 }}
               >
-
                 {/* TOP */}
                 <Stack
                   direction="row"
@@ -107,17 +103,17 @@ export default function ServiceDetailPage() {
                   <Chip
                     label="Development"
                     sx={{
-                      background: 'rgba(255,255,255,0.15)',
-                      color: '#fff',
-                      backdropFilter: 'blur(10px)',
+                      background: "rgba(255,255,255,0.15)",
+                      color: "#fff",
+                      backdropFilter: "blur(10px)",
                       fontWeight: 600,
                     }}
                   />
 
                   <IconButton
                     sx={{
-                      background: 'rgba(255,255,255,0.15)',
-                      color: '#fff',
+                      background: "rgba(255,255,255,0.15)",
+                      color: "#fff",
                     }}
                   >
                     <FavoriteBorder />
@@ -128,13 +124,13 @@ export default function ServiceDetailPage() {
                 <Box>
                   <Typography
                     sx={{
-                      color: '#fff',
+                      color: "#fff",
                       fontWeight: 900,
                       lineHeight: 1.1,
                       mb: 3,
                       fontSize: {
-                        xs: '2.5rem',
-                        md: '4.5rem',
+                        xs: "2.5rem",
+                        md: "4.5rem",
                       },
                     }}
                   >
@@ -147,7 +143,7 @@ export default function ServiceDetailPage() {
 
                   <Typography
                     sx={{
-                      color: 'rgba(255,255,255,0.8)',
+                      color: "rgba(255,255,255,0.8)",
                       fontSize: 18,
                       lineHeight: 1.9,
                       maxWidth: 700,
@@ -165,28 +161,25 @@ export default function ServiceDetailPage() {
                     mt: 4,
                     p: 3,
                     borderRadius: 5,
-                    background: 'rgba(255,255,255,0.08)',
-                    backdropFilter: 'blur(12px)',
-                    border: '1px solid rgba(255,255,255,0.08)',
+                    background: "rgba(255,255,255,0.08)",
+                    backdropFilter: "blur(12px)",
+                    border: "1px solid rgba(255,255,255,0.08)",
                   }}
                 >
                   <Stack
-                    direction={{ xs: 'column', md: 'row' }}
+                    direction={{ xs: "column", md: "row" }}
                     justifyContent="space-between"
                     spacing={4}
                   >
-
                     <Stack direction="row" spacing={5}>
                       <Box>
-                        <Typography
-                          sx={{ color: 'rgba(255,255,255,0.7)' }}
-                        >
+                        <Typography sx={{ color: "rgba(255,255,255,0.7)" }}>
                           Delivery
                         </Typography>
 
                         <Typography
                           sx={{
-                            color: '#fff',
+                            color: "#fff",
                             fontWeight: 800,
                             fontSize: 22,
                           }}
@@ -196,15 +189,13 @@ export default function ServiceDetailPage() {
                       </Box>
 
                       <Box>
-                        <Typography
-                          sx={{ color: 'rgba(255,255,255,0.7)' }}
-                        >
+                        <Typography sx={{ color: "rgba(255,255,255,0.7)" }}>
                           Rating
                         </Typography>
 
                         <Typography
                           sx={{
-                            color: '#fff',
+                            color: "#fff",
                             fontWeight: 800,
                             fontSize: 22,
                           }}
@@ -214,15 +205,13 @@ export default function ServiceDetailPage() {
                       </Box>
 
                       <Box>
-                        <Typography
-                          sx={{ color: 'rgba(255,255,255,0.7)' }}
-                        >
+                        <Typography sx={{ color: "rgba(255,255,255,0.7)" }}>
                           Starting At
                         </Typography>
 
                         <Typography
                           sx={{
-                            color: '#fff',
+                            color: "#fff",
                             fontWeight: 800,
                             fontSize: 22,
                           }}
@@ -239,11 +228,11 @@ export default function ServiceDetailPage() {
                           px: 4,
                           py: 1.5,
                           borderRadius: 4,
-                          background: '#fff',
-                          color: '#5B6CFF',
+                          background: "#fff",
+                          color: "#5B6CFF",
                           fontWeight: 700,
-                          '&:hover': {
-                            background: '#fff',
+                          "&:hover": {
+                            background: "#fff",
                           },
                         }}
                       >
@@ -256,8 +245,8 @@ export default function ServiceDetailPage() {
                           px: 4,
                           py: 1.5,
                           borderRadius: 4,
-                          color: '#fff',
-                          borderColor: 'rgba(255,255,255,0.3)',
+                          color: "#fff",
+                          borderColor: "rgba(255,255,255,0.3)",
                         }}
                       >
                         Contact
@@ -270,15 +259,15 @@ export default function ServiceDetailPage() {
           </Grid>
 
           {/* PROFILE CARD */}
-          <Grid item xs={12} lg={4} >
+          <Grid item xs={12} lg={4}>
             <Card
               sx={{
                 borderRadius: 5,
-                position: 'sticky',
+                position: "sticky",
                 top: 30,
-                boxShadow: '0 10px 40px rgba(0,0,0,0.08)',
-                px:13,
-                py:5
+                boxShadow: "0 10px 40px rgba(0,0,0,0.08)",
+                px: 13,
+                py: 5,
               }}
             >
               <CardContent sx={{ p: 4 }}>
@@ -353,8 +342,7 @@ export default function ServiceDetailPage() {
                     sx={{
                       borderRadius: 3,
                       py: 1.5,
-                      background:
-                        'linear-gradient(135deg,#5B6CFF,#7F56D9)',
+                      background: "linear-gradient(135deg,#5B6CFF,#7F56D9)",
                     }}
                   >
                     Hire Me
@@ -370,7 +358,7 @@ export default function ServiceDetailPage() {
           sx={{
             mt: 5,
             borderRadius: 6,
-            boxShadow: '0 10px 40px rgba(0,0,0,0.06)',
+            boxShadow: "0 10px 40px rgba(0,0,0,0.06)",
           }}
         >
           <CardContent sx={{ p: 5 }}>
@@ -381,32 +369,32 @@ export default function ServiceDetailPage() {
             <Typography
               sx={{
                 lineHeight: 2,
-                color: 'text.secondary',
+                color: "text.secondary",
                 fontSize: 16,
               }}
             >
               I will create a complete full-stack web application with
-              responsive design, authentication systems, APIs,
-              dashboards, scalable backend architecture, and modern
-              UI/UX tailored for startups and SaaS businesses.
+              responsive design, authentication systems, APIs, dashboards,
+              scalable backend architecture, and modern UI/UX tailored for
+              startups and SaaS businesses.
             </Typography>
 
             <Grid container spacing={2} mt={3}>
               {[
-                'React.js',
-                'Node.js',
-                'MongoDB',
-                'REST API',
-                'Responsive Design',
-                'Authentication',
-                'Dashboard UI',
+                "React.js",
+                "Node.js",
+                "MongoDB",
+                "REST API",
+                "Responsive Design",
+                "Authentication",
+                "Dashboard UI",
               ].map((skill) => (
                 <Grid item key={skill}>
                   <Chip
                     label={skill}
                     sx={{
-                      background: '#EEF2FF',
-                      color: '#4F46E5',
+                      background: "#EEF2FF",
+                      color: "#4F46E5",
                       fontWeight: 700,
                     }}
                   />
@@ -428,12 +416,11 @@ export default function ServiceDetailPage() {
                 <Card
                   sx={{
                     borderRadius: 6,
-                    overflow: 'hidden',
-                    boxShadow:
-                      '0 10px 30px rgba(0,0,0,0.06)',
-                    transition: '0.3s',
-                    '&:hover': {
-                      transform: 'translateY(-8px)',
+                    overflow: "hidden",
+                    boxShadow: "0 10px 30px rgba(0,0,0,0.06)",
+                    transition: "0.3s",
+                    "&:hover": {
+                      transform: "translateY(-8px)",
                     },
                   }}
                 >
@@ -472,9 +459,8 @@ export default function ServiceDetailPage() {
                   sx={{
                     borderRadius: 6,
                     p: 2,
-                    height: '100%',
-                    boxShadow:
-                      '0 10px 30px rgba(0,0,0,0.06)',
+                    height: "100%",
+                    boxShadow: "0 10px 30px rgba(0,0,0,0.06)",
                   }}
                 >
                   <CardContent>
@@ -486,7 +472,7 @@ export default function ServiceDetailPage() {
                       variant="h3"
                       fontWeight={900}
                       sx={{
-                        color: '#5B6CFF',
+                        color: "#5B6CFF",
                         my: 3,
                       }}
                     >
@@ -503,7 +489,7 @@ export default function ServiceDetailPage() {
                         >
                           <CheckCircle
                             sx={{
-                              color: '#22C55E',
+                              color: "#22C55E",
                               fontSize: 20,
                             }}
                           />
@@ -519,8 +505,7 @@ export default function ServiceDetailPage() {
                       sx={{
                         py: 1.5,
                         borderRadius: 4,
-                        background:
-                          'linear-gradient(135deg,#5B6CFF,#7F56D9)',
+                        background: "linear-gradient(135deg,#5B6CFF,#7F56D9)",
                       }}
                     >
                       Select Package

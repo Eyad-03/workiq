@@ -18,7 +18,6 @@ import {
   Divider,
   Stack,
 } from "@mui/material";
-import NavBar from "../../components/User/NavBar";
 import SearchIcon from "@mui/icons-material/Search";
 import StarIcon from "@mui/icons-material/Star";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
@@ -28,7 +27,6 @@ import TuneIcon from "@mui/icons-material/Tune";
 import BoltIcon from "@mui/icons-material/Bolt";
 import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import Footer from "../../components/User/Footer";
 
 const services = [
   {
@@ -151,7 +149,7 @@ const featuredCategories = [
 function ServicesPage() {
   return (
     <Box sx={{ flexGrow: 1, minHeight: "100vh", bgcolor: "#fdfdfd" }}>
-      <NavBar />
+ 
 
       <Box sx={{ mt: 14, px: 14 }}>
         <Typography
@@ -378,7 +376,7 @@ function ServicesPage() {
           </Grid>
         ))}
       </Grid>
-      <Footer />
+      
     </Box>
   );
 }

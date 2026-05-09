@@ -17,7 +17,7 @@ import TextSnippetIcon from "@mui/icons-material/TextSnippet";
 import DrawIcon from "@mui/icons-material/Draw";
 import LocalGroceryStoreIcon from "@mui/icons-material/LocalGroceryStore";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import NavBar from "../../components/User/NavBar";
+import NavBar from "../../components/Shared/NavBar";
 import office from "../../image/office.png";
 import Footer from "../../components/User/Footer";
 
@@ -105,8 +105,6 @@ const categories = [
 function Home() {
   return (
     <Box sx={{ flexGrow: 1, minHeight: "100vh", bgcolor: "#fdfdfd" }}>
-      <NavBar />
-
       <Box
         sx={{
           background: "linear-gradient(135deg, #2c4a73 0%, #162a4a 100%)",
@@ -316,7 +314,6 @@ function Home() {
           ))}
         </Grid>
       </Container>
-      <Footer />
     </Box>
   );
 }
