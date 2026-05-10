@@ -22,9 +22,29 @@ import {
 } from "@mui/icons-material";
 import PersonIcon from "@mui/icons-material/Person";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 function Register() {
+  const [userData, setUserData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    role: "",
+  });
+
   const navigate = useNavigate();
+
+  const handleSubmit = async (e)=>
+  {
+
+    e.preventDefault()
+
+    
+
+  }
+
+
   return (
     <Box
       sx={{
@@ -96,10 +116,11 @@ function Register() {
           />
         </Tabs>
 
-        <Box component="form">
+        <Box component="form" onSubmit={handleSubmit}>
           <TextField
             fullWidth
             placeholder="UserName"
+            onChange={(e) => setUserData({ ...userData, name: e.target.value })}
             variant="outlined"
             sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 }, mt: 4 }}
             InputProps={{
@@ -114,6 +135,9 @@ function Register() {
           <TextField
             fullWidth
             placeholder="Email Address"
+            onChange={(e) =>
+              setUserData({ ...userData, email: e.target.value })
+            }
             variant="outlined"
             margin="normal"
             InputProps={{
@@ -128,6 +152,9 @@ function Register() {
           <TextField
             fullWidth
             placeholder="Password"
+            onChange={(e) =>
+              setUserData({ ...userData, password: e.target.value })
+            }
             type="password"
             variant="outlined"
             margin="normal"
@@ -151,6 +178,9 @@ function Register() {
           <TextField
             fullWidth
             placeholder="Confirm Password"
+            onChange={(e) =>
+              setUserData({ ...userData, confirmPassword: e.target.value })
+            }
             type="password"
             variant="outlined"
             margin="normal"

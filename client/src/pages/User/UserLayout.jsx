@@ -10,8 +10,8 @@ import {
   Grid,
   Card,
 } from "@mui/material";
-import NavBar from "../Shared/NavBar";
-import Footer from "./Footer";
+import NavBar from "../../components/Shared/NavBar";
+import Footer from "../../components/User/Footer";
 import { Outlet } from "react-router-dom";
 
 function UserLayout() {

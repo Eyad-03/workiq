@@ -21,9 +21,14 @@ import {
   Twitter,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 function Login() {
+  const [userData, setUserData] = useState({ email: "", password: "" });
+
   const navigate = useNavigate();
+
+  const handleSubmit = async () => {};
 
   return (
     <Box
@@ -96,10 +101,13 @@ function Login() {
           />
         </Tabs>
 
-        <Box component="form">
+        <Box component="form" onSubmit={handleSubmit}>
           <TextField
             fullWidth
             placeholder="Email Address"
+            onChange={(e) =>
+              setUserData({ ...userData, email: e.target.value })
+            }
             variant="outlined"
             InputProps={{
               startAdornment: (
@@ -113,6 +121,9 @@ function Login() {
           <TextField
             fullWidth
             placeholder="Password"
+            onChange={(e) =>
+              setUserData({ ...userData, password: e.target.value })
+            }
             type="password"
             variant="outlined"
             margin="normal"

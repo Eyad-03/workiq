@@ -9,7 +9,7 @@ import Home from "./pages/User/Home";
 import ServicesPage from "./pages/User/ServicesPage";
 import Test from "./pages/User/test";
 import ServiceDetailPage from "./pages/User/ServiceDetailPage";
-import UserLayout from "./components/User/UserLayout";
+import UserLayout from "./pages/User/UserLayout";
 import DashBoard from "./pages/Shared/DashBoard";
 import Edit from "./pages/Admin/Edit";
 
@@ -23,14 +23,14 @@ function App() {
           <Route element={<UserLayout />}>
             <Route path="/" element={<Home />} />
             <Route path="/user-profile" element={<UserProfile />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
             <Route path="/payment" element={<Payment />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/services" element={<ServicesPage />} />
             <Route path="/test" element={<Test />} />
             <Route path="/service/detail" element={<ServiceDetailPage />} />
           </Route>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
 
           {/* Admin pages */}
 
