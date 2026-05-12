@@ -20,6 +20,10 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import NavBar from "../../components/Shared/NavBar";
 import office from "../../image/office.png";
 import Footer from "../../components/User/Footer";
+import { useNavigate, useNavigation } from "react-router-dom";
+import api from "../../api";
+import { useState } from "react";
+import { useEffect } from "react";
 
 const popularInfo = [
   {
@@ -66,43 +70,70 @@ const features = [
     active: true,
   },
 ];
-
+/*
 const categories = [
   {
     title: "Graphic & Design",
     img: "https://images.unsplash.com/photo-1558655146-d09347e92766?w=400",
+    url:'graphic'
   },
   {
     title: "Cartoon Animation",
     img: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400",
+    url:'animation'
   },
   {
     title: "Illustration",
     img: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400",
+    url:'illustration'
   },
   {
     title: "Flyers & Vouchers",
     img: "https://images.unsplash.com/photo-1586717791821-3f44a563eb4c?w=400",
+    url:'vouchers'
   },
   {
     title: "Logo Design",
     img: "https://images.unsplash.com/photo-1626785774573-4b799315345d?w=400",
+    url:'logo'
   },
   {
     title: "Social graphics",
     img: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=400",
+    url:'social'
+    
   },
   {
     title: "Article writing",
     img: "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=400",
+    url:'article'
   },
   {
     title: "Video Editing",
     img: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=400",
+    url:'video'
   },
 ];
-
+*/
 function Home() {
+  const navigate = useNavigate();
+  const [categories, setCategories] = useState([]);
+
+  const fetchCategory = async () => {
+    try {
+      const res = await api.get("/categories");
+
+      setCategories(res.data.categories);
+      console.log(res.data)
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+
+  useEffect(function () {
+    fetchCategory();
+  }, []);
+
   return (
     <Box sx={{ flexGrow: 1, minHeight: "100vh", bgcolor: "#fdfdfd" }}>
       <Box
@@ -154,7 +185,6 @@ function Home() {
             <Grid size={{ xs: 12, md: 5 }}>
               <Box
                 component="img"
-                src=""
                 sx={{
                   width: "100%",
                   pt: "100%", // Creates a square aspect ratio
@@ -179,7 +209,7 @@ function Home() {
           sx={{ display: "flex", justifyContent: "center", p: 10 }}
         >
           {popularInfo.map((item) => (
-            <Grid item size={{ xs: 12, sm: 6, md: 4 }}>
+            <Grid item size={{ xs: 12, sm: 6, md: 4 }} key={item.serviceName}>
               <Card
                 sx={{
                   p: 4,
@@ -230,6 +260,7 @@ function Home() {
               <Stack spacing={5}>
                 {features.map((item) => (
                   <Card
+                    key={item.title}
                     elevation={2}
                     sx={{
                       p: 3,
@@ -275,6 +306,7 @@ function Home() {
           {categories.map((item, index) => (
             <Grid item size={{ xs: 12, sm: 6, md: 3 }} key={index}>
               <Box
+                onClick={() => navigate(`services/${item.category_id}`)}
                 sx={{
                   height: 160,
                   borderRadius: 4, // 4 * 8px = 32px or use '16px'
@@ -284,7 +316,7 @@ function Home() {
                   position: "relative",
                   overflow: "hidden",
                   cursor: "pointer",
-                  backgroundImage: `url(${item.img})`,
+                  backgroundImage: `url(${item.image_url})`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                   transition: "0.3s",
@@ -307,7 +339,7 @@ function Home() {
                     position: "relative",
                   }}
                 >
-                  {item.title}
+                  {item.category_name}
                 </Typography>
               </Box>
             </Grid>

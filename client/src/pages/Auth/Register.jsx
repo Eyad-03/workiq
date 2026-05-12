@@ -21,8 +21,11 @@ import {
   Twitter,
 } from "@mui/icons-material";
 import PersonIcon from "@mui/icons-material/Person";
+import Groups3Icon from "@mui/icons-material/Groups3";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import api from "../../api.js";
+import toast from "react-hot-toast";
 
 function Register() {
   const [userData, setUserData] = useState({
@@ -35,15 +38,28 @@ function Register() {
 
   const navigate = useNavigate();
 
-  const handleSubmit = async (e)=>
-  {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    e.preventDefault()
+    try {
 
-    
+      if(!userData.name || !userData.email || !userData.password || !userData.confirmPassword || userData.role)
+      {
+        toast.error("All fields are required");
+        return
+      }
 
-  }
-
+      const res = await api.post("/auth/register", userData);
+      if (res.status !== 201) {
+        toast.error(res.data.message);
+        return;
+      }
+      toast.success(res.data.message);
+      navigate('/')
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
 
   return (
     <Box
@@ -53,7 +69,7 @@ function Register() {
         alignItems: "center",
         justifyContent: "center",
         background: "linear-gradient(135deg, #004a4a 0%, #16a34a15 100%)",
-        padding: "0px",
+        py: 5,
       }}
     >
       <Paper
@@ -200,6 +216,23 @@ function Register() {
             }}
             sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }}
           />
+
+          <TextField
+            fullWidth
+            placeholder="Role"
+            onChange={(e) => setUserData({ ...userData, role: e.target.value })}
+            type="text"
+            variant="outlined"
+            margin="normal"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Groups3Icon fontSize="small" />
+                </InputAdornment>
+              ),
+            }}
+            sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }}
+          />
         </Box>
 
         <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
@@ -215,6 +248,7 @@ function Register() {
 
         <Button
           fullWidth
+          onClick={handleSubmit}
           sx={{
             backgroundColor: "#003a3a",
             "&hover": { backgroundColor: "#026e6e" },

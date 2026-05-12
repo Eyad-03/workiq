@@ -1,12 +1,24 @@
 import bcrypt from "bcryptjs";
-
-import { findUserByEmail } from "../models/user.Model.js";
 import { createUser } from "../models/auth.Model.js";
+import {
+  findUserByEmail,
+  getUserById,
+  saveRefreshToken,
+} from "../models/user.Model.js";
+import {
+  generateAccessTokens,
+  generateRefreshTokens,
+  verifyRefreshTokens,
+} from "../utils/token.utils.js";
+import {
+  setAccessTokenCookie,
+  setRefreshTokenCookie,
+} from "../utils/cookies.utils.js";
 
 export const register = async (req, res) => {
-  const { name, email, password, role } = req.body;
+  const { name, email, password, confirmPassword, role } = req.body;
   try {
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !confirmPassword) {
       return res.status(400).json({ message: "All Field is Required" });
     }
 
@@ -16,9 +28,17 @@ export const register = async (req, res) => {
       return res.status(400).json({ message: "Email is already exist" });
     }
 
-    const hashed_password = await bcrypt.hash(password, 10);
-    const newUser = await createUser(name, email, hashed_password, role);
+    if (password !== confirmPassword) {
+      return res.status(400).json({ message: "Passwords do not match" });
+    }
 
+    const hashed_password = await bcrypt.hash(password, 10);
+    const newUser = await createUser(
+      name,
+      email,
+      hashed_password,
+      role || "user",
+    );
     if (!newUser) {
       return res.status(400).json({ message: "Failed create user" });
     }
@@ -54,6 +74,9 @@ export const login = async (req, res) => {
     const accessToken = generateAccessTokens(user);
     const refreshToken = generateRefreshTokens(user);
     await saveRefreshToken(user.userid, refreshToken);
+
+    setAccessTokenCookie(res, accessToken);
+    setRefreshTokenCookie(res, refreshToken);
 
     res.status(200).json({
       message: "Logged in successfully",

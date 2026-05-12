@@ -1,12 +1,12 @@
 import jwt from "jsonwebtoken";
 
-const ACCESS_SECRET = process.env.JWT_SECERET;
+const ACCESS_SECRET = process.env.JWT_SECRET;
 const REFRESH_SECRET = process.env.JWT_REFRESH_TOKENS;
 
 export const generateAccessTokens = (user) => {
   return jwt.sign(
     {
-      userId: user.userId,
+      userid: user.userid,
       role: user.role,
     },
     ACCESS_SECRET,

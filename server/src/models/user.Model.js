@@ -19,7 +19,7 @@ export const getAllUser = async () => {
 };
 
 export const changePassword = async (userId, hashed_password) => {
-  const query = `update users set hashed_password = $1 where userId = $2 returning userId name email hashed_password`;
+  const query = `update users set hashed_password = $1 where userId = $2 returning userid, name, email, hashed_password`;
   const result = await pool.query(query, [hashed_password, userId]);
   return result.rows[0];
 };
@@ -34,6 +34,6 @@ export const saveRefreshToken =async (userId,refreshToken)=>
 {
 
 const query = `update users set refresh_token = $1 where userId=$2`
-const result =await pool.query(query,[userId,refreshToken])
+const result =await pool.query(query,[refreshToken,userId])
 
 }

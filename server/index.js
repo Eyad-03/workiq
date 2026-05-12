@@ -5,6 +5,8 @@ import helmet from "helmet"
 import bodyParser from "body-parser"
 import cookieParser from "cookie-parser";
 import authRoutes  from './src/routes/auth.Routes.js'
+import categoryRoutes from './src/routes/category.Routes.js'
+import serviceRoutes from './src/routes/service.Routes.js'
 
 const app = express()
 app.use(express.json())
@@ -20,6 +22,8 @@ app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use('/api', authRoutes)
+app.use('/api',categoryRoutes)
+app.use('/api',serviceRoutes)
 
 app.get("/health", (req, res) => {
     res.send("alive");

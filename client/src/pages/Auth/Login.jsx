@@ -22,13 +22,33 @@ import {
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import api from "../../api.js";
+import toast from "react-hot-toast";
 
 function Login() {
   const [userData, setUserData] = useState({ email: "", password: "" });
 
   const navigate = useNavigate();
 
-  const handleSubmit = async () => {};
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      if (!userData.email || !userData.password) {
+        toast.error("All fields are required");
+        return;
+      }
+      const res = await api.post("/auth/login", userData);
+      if (res.status !== 200) {
+        toast.error(res.data.message);
+        return;
+      }
+      toast.success(res.data.message);
+      navigate("/");
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
 
   return (
     <Box
@@ -158,6 +178,7 @@ function Login() {
 
         <Button
           fullWidth
+          onClick={handleSubmit}
           sx={{
             backgroundColor: "#003a3a",
             "&hover": { backgroundColor: "#026e6e" },
