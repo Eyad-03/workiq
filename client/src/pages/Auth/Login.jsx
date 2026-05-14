@@ -24,30 +24,23 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import api from "../../api.js";
 import toast from "react-hot-toast";
+import { useEffect } from "react";
+import { useContext } from "react";
+import { UserContext } from "../../context/userContext.jsx";
 
 function Login() {
   const [userData, setUserData] = useState({ email: "", password: "" });
 
   const navigate = useNavigate();
 
+  const {login} = useContext(UserContext)
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      if (!userData.email || !userData.password) {
-        toast.error("All fields are required");
-        return;
-      }
-      const res = await api.post("/auth/login", userData);
-      if (res.status !== 200) {
-        toast.error(res.data.message);
-        return;
-      }
-      toast.success(res.data.message);
-      navigate("/");
-    } catch (err) {
-      console.error(err.message);
-    }
+    login(userData)
+
   };
 
   return (

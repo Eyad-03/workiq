@@ -43,7 +43,7 @@ function Register() {
 
     try {
 
-      if(!userData.name || !userData.email || !userData.password || !userData.confirmPassword || userData.role)
+      if(!userData.name || !userData.email || !userData.password || !userData.confirmPassword || !userData.role)
       {
         toast.error("All fields are required");
         return

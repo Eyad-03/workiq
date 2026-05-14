@@ -17,7 +17,6 @@ import { Toaster } from "react-hot-toast";
 function App() {
   return (
     <>
-      <BrowserRouter>
         {/* User pages */}
         <Toaster position="top-center" />
         <Routes>
@@ -28,7 +27,7 @@ function App() {
             <Route path="/cart" element={<Cart />} />
             <Route path="/services/:catId" element={<ServicesPage />} />
             <Route path="/test" element={<Test />} />
-            <Route path="/service/detail" element={<ServiceDetailPage />} />
+            <Route path="/service/detail/:serviceId" element={<ServiceDetailPage />} />
           </Route>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
@@ -36,10 +35,9 @@ function App() {
           {/* Admin pages */}
 
           <Route element={<DashBoard />}>
-            <Route path="edit" element={<Edit />} />
+            <Route path="/edit" element={<Edit />} />
           </Route>
         </Routes>
-      </BrowserRouter>
     </>
   );
 }

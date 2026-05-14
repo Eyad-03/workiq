@@ -24,8 +24,16 @@ import {
   LocationOn,
 } from "@mui/icons-material";
 import NavBar from "../../components/Shared/NavBar";
+import api from "../../api";
+import { useState } from "react";
+import { useParams } from "react-router-dom";
+import { useEffect } from "react";
 
 export default function ServiceDetailPage() {
+  const [service, setService] = useState({});
+
+  const { serviceId } = useParams();
+
   const previousWorks = [
     {
       id: 1,
@@ -68,6 +76,20 @@ export default function ServiceDetailPage() {
     },
   ];
 
+  const fetchService = async () => {
+    try {
+      const res =await api.get(`/service/${serviceId}`);
+      setService(res.data.service);
+      console.log(res.data.service);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+
+  useEffect(function () {
+    fetchService();
+  }, []);
+
   return (
     <Box sx={{ background: "#f4f7fb", minHeight: "100vh", py: 20 }}>
       <Container maxWidth="xl">
@@ -101,7 +123,7 @@ export default function ServiceDetailPage() {
                   alignItems="center"
                 >
                   <Chip
-                    label="Development"
+                    label={service.category_name}
                     sx={{
                       background: "rgba(255,255,255,0.15)",
                       color: "#fff",
@@ -126,6 +148,8 @@ export default function ServiceDetailPage() {
                     sx={{
                       color: "#fff",
                       fontWeight: 900,
+                      width:'100%',
+                      maxWidth:'500px',
                       lineHeight: 1.1,
                       mb: 3,
                       fontSize: {
@@ -134,11 +158,7 @@ export default function ServiceDetailPage() {
                       },
                     }}
                   >
-                    Full-Stack Web
-                    <br />
-                    Application
-                    <br />
-                    Development
+                    {service.service_name}
                   </Typography>
 
                   <Typography
@@ -149,9 +169,7 @@ export default function ServiceDetailPage() {
                       maxWidth: 700,
                     }}
                   >
-                    Build scalable, modern, and high-performance web
-                    applications using React, Node.js, and cloud-ready
-                    architecture tailored for startups and businesses.
+                    {service.service_description}
                   </Typography>
                 </Box>
 
@@ -184,7 +202,7 @@ export default function ServiceDetailPage() {
                             fontSize: 22,
                           }}
                         >
-                          7 - 14 Days
+                          {service.delivery} Days
                         </Typography>
                       </Box>
 
@@ -200,7 +218,7 @@ export default function ServiceDetailPage() {
                             fontSize: 22,
                           }}
                         >
-                          ⭐ 4.9
+                          ⭐ {service.rating}
                         </Typography>
                       </Box>
 
@@ -216,7 +234,7 @@ export default function ServiceDetailPage() {
                             fontSize: 22,
                           }}
                         >
-                          $299
+                          ${service.starting_price}
                         </Typography>
                       </Box>
                     </Stack>

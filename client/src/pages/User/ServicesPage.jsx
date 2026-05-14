@@ -269,7 +269,7 @@ function ServicesPage() {
                   </Stack>
                 </Stack>
                 <Button
-                  onClick={() => navigate("/service/detail")}
+                  onClick={() => navigate(`/service/detail/${service.service_id}`)}
                   sx={{
                     border: "1px solid #6C63FF",
                     borderRadius: 5,

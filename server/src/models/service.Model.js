@@ -13,8 +13,16 @@ export const getAllService = async () => {
   return result.rows;
 };
 
+export const getServiceById = async (serviceId) => {
+  const query =
+    "select s.*,c.category_name from services s inner join categories c on s.category_id=c.category_id  where service_id = $1 ";
+  const result = await pool.query(query, [serviceId]);
+  return result.rows[0];
+};
+
 export const getServicesByCategory = async (category_id) => {
-  const query = "select * from services where category_id = $1";
+  const query =
+    "select s.*,c.category_name from services s INNER JOIN Categories c ON s.category_id = c.category_id where s.category_id = $1";
   const result = await pool.query(query, [category_id]);
   return result.rows;
 };
