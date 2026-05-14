@@ -26,7 +26,7 @@ import api from "../../api.js";
 import toast from "react-hot-toast";
 import { useEffect } from "react";
 import { useContext } from "react";
-import { UserContext } from "../../context/userContext.jsx";
+import { UserContext } from "../../context/UserContext.jsx";
 
 function Login() {
   const [userData, setUserData] = useState({ email: "", password: "" });

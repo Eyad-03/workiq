@@ -10,14 +10,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "react": "^19.2.5",
-    "react-dom": "^19.2.5",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^7.3.9",
-    "@mui/material": "^7.3.9",
+    "@mui/material": "^7.3.11",
+    "@mui/x-data-grid": "^8.28.6",
     "axios": "^1.13.6",
     "mui-image": "^1.0.9",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
     "react-hot-toast": "^2.6.0",
     "react-router-dom": "^7.13.1"
   },

@@ -9,18 +9,19 @@ export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  const currentUser = async () => {
-    try {
-      const res = await api.get("/auth/me");
-      setUser(res.data.me);
-      console.log("from context", res.data.me);
-    } catch (err) {
-      console.log("not logged in");
-      setUser(null);
-    }
-  };
+const currentUser = async () => {
+  try {
+    const res = await api.get("/auth/me");
+    setUser(res.data.me);
+  } catch (err) {
+    setUser(null);
+  } finally {
+    setLoading(false); // 👈 done loading either way
+  }
+};
   useEffect(() => {
     currentUser();
   }, []);
@@ -39,8 +40,9 @@ export const UserProvider = ({ children }) => {
 
       toast.success(res.data.message);
       await currentUser()
-      if (res.data.user.role === "provider") navigate("/edit");
+      if (res.data.user.role === "provider") navigate("/provider/profile");
       if (res.data.user.role === "user") navigate("/");
+      if (res.data.user.role === "admin") navigate("/edit");
     } catch (err) {
       console.error(err.message);
     }
@@ -48,7 +50,7 @@ export const UserProvider = ({ children }) => {
 
   return (
     <>
-      <UserContext.Provider value={{ currentUser, login }}>
+      <UserContext.Provider value={{ currentUser, login,user,loading }}>
         {children}
       </UserContext.Provider>
     </>

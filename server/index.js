@@ -7,6 +7,8 @@ import cookieParser from "cookie-parser";
 import authRoutes  from './src/routes/auth.Routes.js'
 import categoryRoutes from './src/routes/category.Routes.js'
 import serviceRoutes from './src/routes/service.Routes.js'
+import providerRoutes from './src/routes/provider.Routes.js';
+import userRoutes from './src/routes/user.Routes.js'
 
 const app = express()
 app.use(express.json())
@@ -24,6 +26,9 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use('/api', authRoutes)
 app.use('/api',categoryRoutes)
 app.use('/api',serviceRoutes)
+app.use('/api', providerRoutes);
+app.use('/api', userRoutes);
+
 
 app.get("/health", (req, res) => {
     res.send("alive");

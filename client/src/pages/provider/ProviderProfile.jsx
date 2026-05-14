@@ -7,10 +7,39 @@ import {
   Avatar,
   Paper,
 } from "@mui/material";
+import api from "../../api";
+import toast from "react-hot-toast";
+import { useContext } from "react";
+import { UserContext } from "../../context/UserContext";
+import { useEffect } from "react";
 
-const UserProfile = () => {
+
+
+const fields = [
+  { label: "Full Name", placeholder: "Your First Name", state: "first_name" },
+  { label: "Last Name", placeholder: "Your Last Name", state: "last_name" },
+  { label: "Gender", placeholder: "Your Gender", state: "gender" },
+  { label: "Country", placeholder: "Your Country", state: "country" },
+  { label: "City", placeholder: "Your City", state: "city" },
+  { label: "Phone", placeholder: "Your Phone", state: "phone" },
+  { label: "# Project",placeholder: "project number",state: "project_number",},
+  { label: "Experience",placeholder: "Experience Year",state: "experience",},
+  { label: "Specialized",placeholder: "Your Specialized",state: "specialized",},
+  { label: "Portfolio", placeholder: "Portfolio Link", state: "portfolio" },
+];
+
+const Passwordfields = [
+  { label: "Old Password", placeholder: "Old Passoword" },
+  { label: "New Password", placeholder: "New Password" },
+];
+
+
+const ProviderProfile = () => {
+  const [isEdit, setIsEdit] = useState(false);
   const [isChangePassword, setIsChangePassword] = useState(false);
+  const { user, loading } = useContext(UserContext);
 
+  console.log("user in profile:", user);
   const inputStyles = {
     "& .MuiOutlinedInput-root": {
       backgroundColor: "#f8f9fa",
@@ -22,28 +51,51 @@ const UserProfile = () => {
     },
   };
 
-  const fields = [
-    { label: "Full Name", placeholder: "Your First Name" },
-    { label: "Last Name", placeholder: "Your Last Name" },
-    { label: "Gender", placeholder: "Your Gender" },
-    { label: "Country", placeholder: "Your Country" },
-    { label: "Phone", placeholder: "Your Phone" },
-    { label: "Time Zone", placeholder: "Your Time Zone" },
-  ];
 
-  const Passwordfields = [
-    { label: "Old Password", placeholder: "Old Passoword" },
-    { label: "New Password", placeholder: "New Password" },
-  ];
+  const [providerData, setProviderData] = useState({
+    user_id: null,
+    first_name: "",
+    last_name: "",
+    country: "",
+    city: "",
+    gender: "",
+    email:'',
+    phone: "",
+    specialized: "",
+    portfolio: "",
+    experience: null,
+    project_number: null,
+  });
 
+  const handleSave = async () => {
+
+    
+    
+    console.log("Sending data:", providerData);
+    const res = await api.put("/change/profile/provider", providerData);
+    if (res.status === 200) {
+      toast.success("save successfully");
+    }
+
+    console.log(res.data.newProfile);
+    setIsEdit(false);
+  };
+
+  console.log("USER FIELDS:", JSON.stringify(user));
+useEffect(() => {
+  if (user) {
+    setProviderData((prev) => ({
+      ...prev,
+      user_id: user.userid,
+      email: user.email || "",
+      
+    }));
+  }
+}, [user]);
   return (
     <Box
       sx={{
-        bgcolor: "#f4f7f6",
-        minHeight: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        py:15 
+        py: 10,
       }}
     >
       <Paper
@@ -66,21 +118,38 @@ const UserProfile = () => {
                 Eyad Mansour
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                eyadman@gmail.com
+                {loading ? "Loading..." : user?.email || "No Email"}
               </Typography>
             </Box>
           </Box>
-          <Button
-            variant="contained"
-            disableElevation
-            sx={{
-              borderRadius: "8px",
-              textTransform: "none",
-              bgcolor: "#4f86f7",
-            }}
-          >
-            Edit
-          </Button>
+
+          {isEdit ? (
+            <Button
+              onClick={handleSave}
+              variant="contained"
+              disableElevation
+              sx={{
+                borderRadius: "8px",
+                textTransform: "none",
+                bgcolor: "#17a92d",
+              }}
+            >
+              Save
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              disableElevation
+              onClick={() => setIsEdit(!isEdit)}
+              sx={{
+                borderRadius: "8px",
+                textTransform: "none",
+                bgcolor: "#4f86f7",
+              }}
+            >
+              Edit
+            </Button>
+          )}
         </Box>
 
         {/* ✅ Plain CSS grid — always 2 columns */}
@@ -98,6 +167,14 @@ const UserProfile = () => {
                 {field.label}
               </Typography>
               <TextField
+                disabled={!isEdit}
+                value={providerData[field.state] || ""}
+                onChange={(e) =>
+                  setProviderData({
+                    ...providerData,
+                    [field.state]: e.target.value,
+                  })
+                }
                 fullWidth
                 placeholder={field.placeholder}
                 sx={inputStyles}
@@ -162,4 +239,4 @@ const UserProfile = () => {
   );
 };
 
-export default UserProfile;
+export default ProviderProfile;

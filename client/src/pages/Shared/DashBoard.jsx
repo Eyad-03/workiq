@@ -19,15 +19,24 @@ function DashBoard() {
     <Box
       sx={{
         display: "grid",
-        gridTemplateAreas: ` "nav nav nav" 
-        "sidebar main main" `,
+        gridTemplateAreas: `"nav nav nav" 
+                        "sidebar main main"`,
+        gridTemplateColumns: "450px 1fr ",
+        minHeight: "100vh",
+        bgcolor: "white",
       }}
     >
-      <NavBar />
+      <Box sx={{ gridArea: "nav" }}>
+        <NavBar />
+      </Box>
 
-      <Outlet />
+      <Box sx={{ gridArea: "sidebar" }}>
+        <SideBar />
+      </Box>
 
-      <SideBar />
+      <Box sx={{ gridArea: "main", p: 3 }}>
+        <Outlet />
+      </Box>
     </Box>
   );
 }

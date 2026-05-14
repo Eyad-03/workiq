@@ -13,6 +13,8 @@ import UserLayout from "./pages/User/UserLayout";
 import DashBoard from "./pages/Shared/DashBoard";
 import Edit from "./pages/Admin/Edit";
 import { Toaster } from "react-hot-toast";
+import ProviderProfile from "./pages/provider/ProviderProfile";
+import UserData from "./components/Admin/UserData";
 
 function App() {
   return (
@@ -22,7 +24,7 @@ function App() {
         <Routes>
           <Route element={<UserLayout />}>
             <Route path="/" element={<Home />} />
-            <Route path="/user-profile" element={<UserProfile />} />
+            <Route path="/user/profile" element={<UserProfile />} />
             <Route path="/payment" element={<Payment />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/services/:catId" element={<ServicesPage />} />
@@ -32,10 +34,18 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
 
-          {/* Admin pages */}
+          {/* ------------------------ Admin pages -------------------------------*/}
 
+
+            <Route element={<DashBoard />}>
+            <Route path="/user/data" element={<UserData />} />
+            
+          </Route>
+
+            {/*------------------- Provider pages ---------------------------- */}
           <Route element={<DashBoard />}>
             <Route path="/edit" element={<Edit />} />
+            <Route path="/provider/profile" element={<ProviderProfile/>}/>
           </Route>
         </Routes>
     </>

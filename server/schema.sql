@@ -35,3 +35,21 @@ currency VARCHAR(3) DEFAULT 'USD',
 created_at timestamp default current_timestamp 
 
 )
+
+
+CREATE TABLE provider_profile (
+  profile_id     SERIAL PRIMARY KEY,
+  user_id        INT NOT NULL UNIQUE,  -- ← UNIQUE enables upsert
+  first_name     VARCHAR(50),          -- ← remove NOT NULL for first insert
+  last_name      VARCHAR(50),
+  gender         VARCHAR(50),
+  country        VARCHAR(50),
+  city           VARCHAR(50),
+  email          VARCHAR(255),
+  phone          VARCHAR(255),
+  specialized    VARCHAR(255),
+  portfolio      VARCHAR(255),
+  experience     INT,
+  project_number INT,
+  CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES users(userid)
+);
