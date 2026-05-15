@@ -1,4 +1,4 @@
-import { getAllServiceController,getServiceByIdController,getServicesByCategoryController } from "../controllers/service.Controller.js";
+import { createServiceController, deleteServiceController, getAllServiceController,getServiceByIdController,getServiceByProviderIdController,getServicesByCategoryController } from "../controllers/service.Controller.js";
 import express from 'express'
 
 
@@ -6,7 +6,10 @@ import express from 'express'
 const router =express.Router()
 
 router.get('/services',getAllServiceController)
+router.get('/service/provider/:id',getServiceByProviderIdController)
 router.get('/servicesByCategory/:catId',getServicesByCategoryController)
 router.get('/service/:serviceId',getServiceByIdController)
+router.post('/create/service',createServiceController)
+router.delete('/delete/service/:serviceId',deleteServiceController)
 
 export default router

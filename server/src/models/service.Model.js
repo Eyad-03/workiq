@@ -6,7 +6,7 @@ export const getAllService = async () => {
       s.*, 
       c.category_name 
     FROM services s
-    INNER JOIN Categories c ON s.category_id = c.category_id
+    INNER JOIN Categories c ON s.category_name = c.category_name
     ORDER BY s.created_at DESC
   `;
   const result = await pool.query(query);
@@ -15,14 +15,63 @@ export const getAllService = async () => {
 
 export const getServiceById = async (serviceId) => {
   const query =
-    "select s.*,c.category_name from services s inner join categories c on s.category_id=c.category_id  where service_id = $1 ";
+    "select s.*,c.category_name from services s inner join categories c on s.category_name=c.category_name  where service_id = $1 ";
   const result = await pool.query(query, [serviceId]);
   return result.rows[0];
 };
 
 export const getServicesByCategory = async (category_id) => {
   const query =
-    "select s.*,c.category_name from services s INNER JOIN Categories c ON s.category_id = c.category_id where s.category_id = $1";
+    "select s.*,c.category_name from services s INNER JOIN Categories c ON s.category_name = c.category_name where s.category_id = $1";
   const result = await pool.query(query, [category_id]);
   return result.rows;
 };
+
+export const getServiceByProviderId = async (providerId) => {
+  const query = `   
+   SELECT 
+      s.*, 
+      c.category_name 
+    FROM services s
+    INNER JOIN Categories c ON s.category_name = c.category_name where s.provider_id = $1 `;
+
+  const result = await pool.query(query, [providerId]);
+  return result.rows;
+};
+
+// service.Model.js
+export const createService = async (serviceData) => {
+  const {
+    service_name,
+    category_name,
+    service_description,
+    service_image,
+    provider_name,
+    provider_id,
+    starting_price,
+  } = serviceData;
+
+  const query = `INSERT INTO services (service_name, category_name, service_description, service_image, provider_name, provider_id, starting_price)
+                 VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`;
+
+  const result = await pool.query(query, [
+    service_name,
+    category_name,
+    service_description,
+    service_image,
+    provider_name,
+    provider_id,
+    starting_price,
+  ]);
+  return result.rows;
+};
+
+
+export const deleteService = async (serviceId)=>
+{
+
+const query = `delete from services where service_id = $1 `
+const result = await pool.query(query,[serviceId])
+return result.rows
+
+}

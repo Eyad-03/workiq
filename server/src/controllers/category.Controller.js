@@ -10,7 +10,7 @@ export const getAllCategoryController = async (req, res) => {
 
     if (!categories) {
       return res
-        .status(400)
+        .status(200)
         .json({ message: "Category is empty", categories: [] });
     }
 

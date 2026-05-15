@@ -15,6 +15,9 @@ import Edit from "./pages/Admin/Edit";
 import { Toaster } from "react-hot-toast";
 import ProviderProfile from "./pages/provider/ProviderProfile";
 import UserData from "./components/Admin/UserData";
+import ServiceData from './components/Admin/ServiceData'
+import ServiceProvider from './components/provider/ServiceProvider'
+import CategoryData from "./components/Admin/CategoryData";
 
 function App() {
   return (
@@ -39,6 +42,8 @@ function App() {
 
             <Route element={<DashBoard />}>
             <Route path="/user/data" element={<UserData />} />
+            <Route path="/services/data" element={<ServiceData />} />
+            <Route path="/category/data" element={<CategoryData />} />
             
           </Route>
 
@@ -46,6 +51,7 @@ function App() {
           <Route element={<DashBoard />}>
             <Route path="/edit" element={<Edit />} />
             <Route path="/provider/profile" element={<ProviderProfile/>}/>
+            <Route path="/service/provider" element={<ServiceProvider/>}/>
           </Route>
         </Routes>
     </>

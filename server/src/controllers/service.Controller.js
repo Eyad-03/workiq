@@ -2,6 +2,9 @@ import {
   getAllService,
   getServicesByCategory,
   getServiceById,
+  getServiceByProviderId,
+  createService,
+  deleteService,
 } from "../models/service.Model.js";
 
 export const getAllServiceController = async (req, res) => {
@@ -10,7 +13,7 @@ export const getAllServiceController = async (req, res) => {
 
     if (!services) {
       return res
-        .status(400)
+        .status(201)
         .json({ message: "Services is empty", services: [] });
     }
 
@@ -53,6 +56,74 @@ export const getServiceByIdController = async (req, res) => {
     }
 
     return res.status(201).json({ service: service });
+  } catch (err) {
+    console.error(err.message);
+  }
+};
+
+export const getServiceByProviderIdController = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const services = await getServiceByProviderId(id);
+
+    if (services.length === 0) {
+      return res
+        .status(200)
+        .json({ message: "This provider dont have service", services: [] });
+    }
+
+    return res.status(200).json({ message: "", services: services });
+  } catch (err) {
+    console.error(err.message);
+  }
+};
+
+export const createServiceController = async (req, res) => {
+  const {
+    service_name,
+    category_name,
+    service_description,
+    service_image,
+    provider_name,
+    provider_id,
+    starting_price,
+  } = req.body;
+
+  try {
+    const newService = await createService({
+      service_name,
+      category_name,
+      service_description,
+      service_image,
+      provider_name,
+      provider_id,
+      starting_price,
+    });
+
+    if (!newService) {
+      return res
+        .status(201)
+        .json({ message: "Failed add new service", newService: newService });
+    }
+
+    return res
+      .status(201)
+      .json({ message: "new service add done", newService: newService });
+  } catch (err) {
+    console.error(err.message);
+  }
+};
+
+export const deleteServiceController = async (req,res) => {
+  const { serviceId } = req.params;
+
+  try {
+    const services = await deleteService(serviceId);
+
+    return res
+      .status(201)
+      .json({ message: "successfully", services: services });
   } catch (err) {
     console.error(err.message);
   }

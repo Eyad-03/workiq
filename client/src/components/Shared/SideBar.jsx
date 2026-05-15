@@ -26,23 +26,17 @@ import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../context/UserContext";
 
 const adminItems = [
-  { id: 1, text: "Tools", icon: <Build />, path: "/dashboard" },
-  { id: 2, text: "Edit", icon: <Edit />, path: "/edit" }, 
-  { id: 3, text: "Media", icon: <Collections />, path: "/media" },
+  { id: 1, text: "Services", icon: <Build />, path: "/services/data" },
   { id: 4, text: "Users", icon: <GroupIcon />, path: "/user/data" },
+  { id: 2, text: "Category", icon: <GroupIcon />, path: "/category/data" },
   
 
 ];
 
 
 const providerItems = [
-  { id: 1, text: "Tools", icon: <Build />, path: "/dashboard" },
-  { id: 2, text: "Edit", icon: <Edit />, path: "/edit" }, 
-  { id: 3, text: "Media", icon: <Collections />, path: "/media" },
-  { id: 4, text: "Profile", icon: <Person2Icon />, path: "/provider/profile" },
-  { id: 5, text: "Pages", icon: <Description />, path: "/pages" },
-  { id: 6, text: "Comments", icon: <ChatBubble />, path: "/comments", badge: 1 },
-  { id: 7, text: "Appearance", icon: <GridView />, path: "/appearance" },
+  { id: 1, text: "Services", icon: <Build />, path: "/service/provider" },
+
 ];
 
 function SideBar() {

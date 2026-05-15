@@ -21,7 +21,7 @@ function DashBoard() {
         display: "grid",
         gridTemplateAreas: `"nav nav nav" 
                         "sidebar main main"`,
-        gridTemplateColumns: "450px 1fr ",
+        gridTemplateColumns: "350px 1fr ",
         minHeight: "100vh",
         bgcolor: "white",
       }}

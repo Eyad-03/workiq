@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -25,133 +25,78 @@ import {
   DeleteOutline as DeleteIcon,
   MoreVert as MoreIcon,
   TuneRounded as FilterIcon,
-  PersonAdd as PersonAddIcon,
+  TrendingUp as TrendIcon,
 } from "@mui/icons-material";
 import api from "../../api";
 import toast from "react-hot-toast";
+import AddService from "../Shared/AddService";
+import { UserContext } from "../../context/UserContext";
 
-const roleColors = {
-  admin: { bg: "#fff1f0", color: "#c0392b", dot: "#ef4444", border: "#fecaca" },
-  provider: { bg: "#eff6ff", color: "#1d4ed8", dot: "#3b82f6", border: "#bfdbfe" },
-  user: { bg: "#f8fafc", color: "#475569", dot: "#94a3b8", border: "#e2e8f0" },
+
+const categoryColors = {
+  default: { bg: "#f0fdf4", color: "#15803d", dot: "#22c55e" },
+  "Graphic & Design": { bg: "#fdf4ff", color: "#9333ea", dot: "#a855f7" },
+  "Cartoon Animation": { bg: "#fff7ed", color: "#c2410c", dot: "#f97316" },
+  Illustration: { bg: "#eff6ff", color: "#1d4ed8", dot: "#3b82f6" },
+  Development: { bg: "#f0fdf4", color: "#15803d", dot: "#22c55e" },
+  Marketing: { bg: "#fdf2f8", color: "#be185d", dot: "#ec4899" },
 };
 
-const avatarColors = [
-  { bg: "#e0e7ff", color: "#4f46e5" },
-  { bg: "#fce7f3", color: "#be185d" },
-  { bg: "#d1fae5", color: "#065f46" },
-  { bg: "#fff7ed", color: "#c2410c" },
-  { bg: "#f3e8ff", color: "#7c3aed" },
-  { bg: "#ecfdf5", color: "#047857" },
-];
+const getCategoryStyle = (name) =>
+  categoryColors[name] || categoryColors.default;
 
-const getRoleStyle = (role) => roleColors[role] || roleColors.user;
-
-const UserData = () => {
-  const [users, setUser] = useState([]);
+const ServiceData = () => {
+  const [services, setServices] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [loading, setLoading] = useState(true);
   const [hoveredRow, setHoveredRow] = useState(null);
+  const [open, setOpen] = useState(false);
+const {user,loading} = useContext(UserContext)
 
-  const fetchAllUser = async () => {
-    try {
-      setLoading(true);
-      const res = await api.get("/allUsers");
-      if (res.status !== 201) {
-        toast.error(res.data.message);
-      }
-      setUser(res.data.users);
-      toast.success(res.data.message);
-    } catch (err) {
-      toast.error("Failed to fetch users");
-    } finally {
-      setLoading(false);
+
+    console.log(user)
+
+const fetchAllService = async () => {
+  try {
+    if (!user?.userid) return;
+
+    const res = await api.get(`/service/provider/${user.userid}`);
+
+    if (res.status === 201 || res.status === 200) {
+      setServices(res.data.services);
+      toast.success("Services loaded");
     }
-  };
+  } catch (err) {
+    toast.error("Failed to fetch services");
+    console.log(err.message);
+  }
+};
 
-  useEffect(() => {
-    fetchAllUser();
-  }, []);
+useEffect(() => {
+  if (user?.userid) {
+    fetchAllService();
+  }
+}, [user]);
 
-  const filtered = users.filter(
-    (u) =>
-      u.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      u.email?.toLowerCase().includes(searchTerm.toLowerCase())
+  const filtered = services.filter((s) =>
+    s.service_name?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  const adminCount = users.filter((u) => u.role === "admin").length;
-  const providerCount = users.filter((u) => u.role === "provider").length;
-  const userCount = users.filter((u) => u.role === "user").length;
-
+  const maxPrice = Math.max(...services.map((s) => s.starting_price || 0), 1);
+if (loading) {
+    return <LinearProgress />;
+  }
   return (
     <Box
       sx={{
         p: { xs: 2, md: 5 },
+
         minHeight: "100vh",
-        mt:10
+        mt: 10,
       }}
     >
-      {/* Stats Strip */}
-      <Stack direction="row" spacing={2} sx={{ mb: 3 }}>
-        {[
-          { label: "Total Users", value: users.length, icon: "👥", color: "#6366f1" },
-          { label: "Admins", value: adminCount, icon: "🛡️", color: "#ef4444" },
-          { label: "Providers", value: providerCount, icon: "🔧", color: "#3b82f6" },
-          { label: "Users", value: userCount, icon: "👤", color: "#10b981" },
-        ].map((stat) => (
-          <Paper
-            key={stat.label}
-            elevation={0.8}
-            sx={{
-              flex: 1,
-              p: 2,
-              borderRadius: "16px",
-              border: "1px solid #e8edf5",
-              background: "#fff",
-              display: "flex",
-              alignItems: "center",
-              gap: 1.5,
-            }}
-          >
-            <Box
-              sx={{
-                width: 44,
-                height: 44,
-                borderRadius: "12px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 20,
-                background: `${stat.color}18`,
-              }}
-            >
-              {stat.icon}
-            </Box>
-            <Box>
-              <Typography
-                sx={{
-                  fontSize: "0.72rem",
-                  color: "#94a3b8",
-                  fontWeight: 600,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.06em",
-                }}
-              >
-                {stat.label}
-              </Typography>
-              <Typography
-                sx={{ fontWeight: 800, fontSize: "1.35rem", color: "#0f172a", lineHeight: 1.2 }}
-              >
-                {stat.value}
-              </Typography>
-            </Box>
-          </Paper>
-        ))}
-      </Stack>
-
       {/* Main Card */}
       <Paper
-        elevation={0}
+        elevation={8}
         sx={{
           borderRadius: "20px",
           border: "1px solid #e8edf5",
@@ -191,10 +136,10 @@ const UserData = () => {
                     variant="h6"
                     sx={{ fontWeight: 800, color: "#0f172a", lineHeight: 1.2 }}
                   >
-                    User Management
+                    Service Catalog
                   </Typography>
                   <Typography variant="caption" sx={{ color: "#94a3b8" }}>
-                    {filtered.length} of {users.length} users
+                    {filtered.length} of {services.length} services
                   </Typography>
                 </Box>
               </Stack>
@@ -220,7 +165,7 @@ const UserData = () => {
               >
                 <SearchIcon sx={{ color: "#94a3b8", fontSize: 18, mr: 1 }} />
                 <InputBase
-                  placeholder="Search users..."
+                  placeholder="Search services..."
                   sx={{ fontSize: "0.85rem", width: 180 }}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -240,7 +185,8 @@ const UserData = () => {
 
               <Button
                 variant="contained"
-                startIcon={<PersonAddIcon />}
+                onClick={() => setOpen(!open)}
+                startIcon={<AddIcon />}
                 sx={{
                   background: "linear-gradient(135deg, #6366f1, #818cf8)",
                   "&:hover": {
@@ -256,7 +202,7 @@ const UserData = () => {
                   transition: "all 0.2s",
                 }}
               >
-                New User
+                New Service
               </Button>
             </Stack>
           </Stack>
@@ -271,10 +217,16 @@ const UserData = () => {
 
         {/* Table */}
         <TableContainer>
-          <Table sx={{ minWidth: 700 }}>
+          <Table sx={{ minWidth: 750 }}>
             <TableHead>
               <TableRow sx={{ background: "#fafbff" }}>
-                {["ID", "User", "Email", "Role", "Actions"].map((h, i) => (
+                {[
+                  "Service",
+                  "Category",
+                  "Status",
+                  "Price & Demand",
+                  "Actions",
+                ].map((h, i) => (
                   <TableCell
                     key={h}
                     align={i === 4 ? "right" : "left"}
@@ -295,72 +247,54 @@ const UserData = () => {
             </TableHead>
 
             <TableBody>
-              {filtered.map((user, idx) => {
-                const roleStyle = getRoleStyle(user.role);
-                const avatarStyle = avatarColors[idx % avatarColors.length];
-                const isHovered = hoveredRow === user.userid;
+              {filtered.map((service, idx) => {
+                const catStyle = getCategoryStyle(service.category_name);
+                const priceRatio = (service.starting_price / maxPrice) * 100;
+                const isHovered = hoveredRow === service.service_id;
 
                 return (
                   <TableRow
-                    key={user.userid}
-                    onMouseEnter={() => setHoveredRow(user.userid)}
+                    key={service.service_id}
+                    onMouseEnter={() => setHoveredRow(service.service_id)}
                     onMouseLeave={() => setHoveredRow(null)}
                     sx={{
                       background: isHovered ? "#fafbff" : "transparent",
                       transition: "background 0.15s ease",
-                      cursor: "pointer",
                       "& td": { borderBottom: "1px solid #f1f5f9" },
                       "&:last-child td": { borderBottom: "none" },
                     }}
                   >
-                    {/* ID */}
-                    <TableCell sx={{ py: 2 }}>
-                      <Typography
-                        sx={{
-                          fontSize: "0.72rem",
-                          color: "#94a3b8",
-                          fontFamily: "monospace",
-                          background: "#f8fafc",
-                          px: 0.8,
-                          py: 0.3,
-                          borderRadius: "6px",
-                          border: "1px solid #e2e8f0",
-                          display: "inline-block",
-                          fontWeight: 600,
-                        }}
-                      >
-                        #{user.userid.toString().padStart(3, "0")}
-                      </Typography>
-                    </TableCell>
-
-                    {/* User */}
+                    {/* Service */}
                     <TableCell sx={{ py: 2 }}>
                       <Stack direction="row" spacing={2} alignItems="center">
                         <Box sx={{ position: "relative" }}>
                           <Avatar
+                            src={service.image}
+                            variant="rounded"
                             sx={{
-                              width: 42,
-                              height: 42,
+                              width: 48,
+                              height: 48,
                               borderRadius: "14px",
-                              background: avatarStyle.bg,
-                              color: avatarStyle.color,
+                              background:
+                                "linear-gradient(135deg, #e0e7ff, #c7d2fe)",
+                              color: "#4f46e5",
                               fontWeight: 800,
-                              fontSize: "1rem",
+                              fontSize: "1.1rem",
                               boxShadow: isHovered
-                                ? `0 4px 12px ${avatarStyle.color}33`
+                                ? "0 4px 12px rgba(99,102,241,0.2)"
                                 : "none",
                               transition: "box-shadow 0.2s",
                             }}
                           >
-                            {user.name?.charAt(0).toUpperCase()}
+                            {service.service_name?.charAt(0)}
                           </Avatar>
                           <Box
                             sx={{
                               position: "absolute",
                               bottom: -3,
                               right: -3,
-                              width: 13,
-                              height: 13,
+                              width: 14,
+                              height: 14,
                               borderRadius: "50%",
                               background: "#22c55e",
                               border: "2px solid #fff",
@@ -369,41 +303,60 @@ const UserData = () => {
                         </Box>
                         <Box>
                           <Typography
-                            sx={{ fontWeight: 700, color: "#1e293b", fontSize: "0.9rem" }}
+                            sx={{
+                              fontWeight: 700,
+                              color: "#1e293b",
+                              fontSize: "0.9rem",
+                            }}
                           >
-                            {user.name}
+                            {service.service_name}
                           </Typography>
-                          <Typography sx={{ fontSize: "0.72rem", color: "#94a3b8" }}>
-                            Member
+                          <Typography
+                            sx={{
+                              fontSize: "0.72rem",
+                              color: "#94a3b8",
+                              fontFamily: "monospace",
+                              background: "#f8fafc",
+                              px: 0.8,
+                              py: 0.2,
+                              borderRadius: "6px",
+                              border: "1px solid #e2e8f0",
+                              display: "inline-block",
+                              mt: 0.3,
+                            }}
+                          >
+                            SER-{service.service_id.toString().padStart(3, "0")}
                           </Typography>
                         </Box>
                       </Stack>
                     </TableCell>
 
-                    {/* Email */}
-                    <TableCell sx={{ py: 2 }}>
-                      <Typography
+                    {/* Category */}
+                    <TableCell>
+                      <Chip
+                        label={service.category_name}
+                        size="small"
                         sx={{
-                          fontSize: "0.85rem",
-                          color: "#475569",
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 0.8,
+                          fontWeight: 700,
+                          fontSize: "0.72rem",
+                          background: catStyle.bg,
+                          color: catStyle.color,
+                          borderRadius: "8px",
+                          border: `1px solid ${catStyle.color}22`,
+                          "& .MuiChip-label": { px: 1.2 },
                         }}
-                      >
-                        {user.email}
-                      </Typography>
+                      />
                     </TableCell>
 
-                    {/* Role */}
-                    <TableCell sx={{ py: 2 }}>
+                    {/* Status */}
+                    <TableCell>
                       <Box
                         sx={{
                           display: "inline-flex",
                           alignItems: "center",
                           gap: 0.8,
-                          background: roleStyle.bg,
-                          border: `1px solid ${roleStyle.border}`,
+                          background: "#f0fdf4",
+                          border: "1px solid #bbf7d0",
                           borderRadius: "8px",
                           px: 1.2,
                           py: 0.5,
@@ -414,27 +367,76 @@ const UserData = () => {
                             width: 7,
                             height: 7,
                             borderRadius: "50%",
-                            background: roleStyle.dot,
-                            boxShadow: `0 0 0 2px ${roleStyle.dot}44`,
+                            background: "#22c55e",
+                            boxShadow: "0 0 0 2px #86efac",
                           }}
                         />
                         <Typography
                           sx={{
-                            fontSize: "0.75rem",
+                            fontSize: "0.78rem",
                             fontWeight: 700,
-                            color: roleStyle.color,
-                            textTransform: "capitalize",
+                            color: "#16a34a",
                           }}
                         >
-                          {user.role}
+                          Active
                         </Typography>
                       </Box>
                     </TableCell>
 
+                    {/* Price + mini bar */}
+                    <TableCell sx={{ minWidth: 160 }}>
+                      <Box>
+                        <Stack
+                          direction="row"
+                          alignItems="center"
+                          spacing={0.8}
+                          sx={{ mb: 0.6 }}
+                        >
+                          <Typography
+                            sx={{
+                              fontWeight: 800,
+                              color: "#0f172a",
+                              fontSize: "1rem",
+                            }}
+                          >
+                            ${service.starting_price.toLocaleString()}
+                          </Typography>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 0.3,
+                              background: "#f0fdf4",
+                              px: 0.8,
+                              py: 0.15,
+                              borderRadius: "6px",
+                            }}
+                          >
+                            <TrendIcon
+                              sx={{ fontSize: 12, color: "#16a34a" }}
+                            />
+                            <Typography
+                              sx={{
+                                fontSize: "0.68rem",
+                                fontWeight: 700,
+                                color: "#16a34a",
+                              }}
+                            >
+                              USD
+                            </Typography>
+                          </Box>
+                        </Stack>
+                      </Box>
+                    </TableCell>
+
                     {/* Actions */}
-                    <TableCell align="right" sx={{ py: 2 }}>
-                      <Stack direction="row" spacing={0.5} justifyContent="flex-end">
-                        <Tooltip title="Edit user">
+                    <TableCell align="right">
+                      <Stack
+                        direction="row"
+                        spacing={0.5}
+                        justifyContent="flex-end"
+                      >
+                        <Tooltip title="Edit service">
                           <IconButton
                             size="small"
                             sx={{
@@ -451,7 +453,7 @@ const UserData = () => {
                             <EditIcon sx={{ fontSize: 17 }} />
                           </IconButton>
                         </Tooltip>
-                        <Tooltip title="Delete user">
+                        <Tooltip title="Delete">
                           <IconButton
                             size="small"
                             sx={{
@@ -468,17 +470,6 @@ const UserData = () => {
                             <DeleteIcon sx={{ fontSize: 17 }} />
                           </IconButton>
                         </Tooltip>
-                        <IconButton
-                          size="small"
-                          sx={{
-                            color: "#94a3b8",
-                            borderRadius: "10px",
-                            transition: "all 0.15s",
-                            "&:hover": { background: "#f1f5f9" },
-                          }}
-                        >
-                          <MoreIcon sx={{ fontSize: 17 }} />
-                        </IconButton>
                       </Stack>
                     </TableCell>
                   </TableRow>
@@ -489,7 +480,7 @@ const UserData = () => {
                 <TableRow>
                   <TableCell colSpan={5} align="center" sx={{ py: 6 }}>
                     <Typography sx={{ color: "#94a3b8", fontWeight: 600 }}>
-                      No users found
+                      No services found
                     </Typography>
                   </TableCell>
                 </TableRow>
@@ -497,10 +488,12 @@ const UserData = () => {
             </TableBody>
           </Table>
         </TableContainer>
-
       </Paper>
+
+        <AddService open={open} onSetOpen={setOpen}/>
+
     </Box>
   );
 };
 
-export default UserData;
+export default ServiceData;

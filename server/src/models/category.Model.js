@@ -1,7 +1,7 @@
 import { pool } from "../config/db.js";
 
 export const getAllCategories = async () => {
-  const query = "select category_id,category_name,image_url from categories";
+  const query = "select * from categories";
   const result = await pool.query(query);
   return result.rows;
 };
