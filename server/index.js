@@ -9,6 +9,7 @@ import categoryRoutes from './src/routes/category.Routes.js'
 import serviceRoutes from './src/routes/service.Routes.js'
 import providerRoutes from './src/routes/provider.Routes.js';
 import userRoutes from './src/routes/user.Routes.js'
+import requestRoutes from './src/routes/request.Routes.js'
 
 const app = express()
 app.use(express.json())
@@ -28,6 +29,7 @@ app.use('/api',categoryRoutes)
 app.use('/api',serviceRoutes)
 app.use('/api', providerRoutes);
 app.use('/api', userRoutes);
+app.use('/api', requestRoutes);
 
 
 app.get("/health", (req, res) => {

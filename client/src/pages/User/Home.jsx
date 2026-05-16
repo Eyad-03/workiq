@@ -306,7 +306,7 @@ function Home() {
           {categories.map((item, index) => (
             <Grid item size={{ xs: 12, sm: 6, md: 3 }} key={index}>
               <Box
-                onClick={() => navigate(`services/${item.category_id}`)}
+                onClick={() => navigate(`services/${item.category_name}`)}
                 sx={{
                   height: 160,
                   borderRadius: 4, // 4 * 8px = 32px or use '16px'

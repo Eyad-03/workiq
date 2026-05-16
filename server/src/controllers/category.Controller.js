@@ -2,6 +2,7 @@ import {
   getCategoryById,
   getAllCategories,
   createCategory,
+  deleteCategory,
 } from "../models/category.model.js";
 
 export const getAllCategoryController = async (req, res) => {
@@ -41,11 +42,27 @@ export const getCategoryByIdController = async (req, res) => {
 };
 
 export const createCategoryController = async (req, res) => {
-  const { name, description, image_url } = req.body;
+  const { category_name, category_description, image_url } = req.body;
 
   try {
-    const newCategory = await createCategory({ name, description, image_url });
+    const newCategory = await createCategory({
+      category_name,
+      category_description,
+      image_url,
+    });
     return res.status(201).json({ message: "new category add" });
+  } catch (err) {
+    console.error(err.message);
+  }
+};
+
+export const deleteCategoryController = async (req, res) => {
+  const { catid } = req.params;
+
+  try {
+    const categories = await deleteCategory(catid);
+
+    return res.status(201).json({ message: "delete category done" });
   } catch (err) {
     console.error(err.message);
   }

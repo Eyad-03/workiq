@@ -53,3 +53,11 @@ CREATE TABLE provider_profile (
   project_number INT,
   CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES users(userid)
 );
+
+
+CREATE TABLE requests (
+    requestid SERIAL PRIMARY KEY,
+    service_id INT REFERENCES services(service_id),
+    provider_id INTEGER REFERENCES users(userid),
+    status VARCHAR(50) DEFAULT 'pending' NOT NULL
+);

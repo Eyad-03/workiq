@@ -1,4 +1,5 @@
-import React from "react";
+/*
+import React, { useContext } from "react";
 import {
   Box,
   Typography,
@@ -13,7 +14,7 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import DisscountCode from "../../components/User/DisscountCode";
-
+import { CartContext } from "../../context/RequestContext";
 const CART_ITEMS = [
   {
     id: 1,
@@ -42,6 +43,9 @@ const CART_ITEMS = [
 ];
 
 function Cart() {
+  const { cartItems } = useContext(CartContext);
+  console.log(cartItems);
+
   return (
     <Box sx={{ p: 15, minHeight: "100vh" }}>
       <Typography variant="h4" fontWeight="bold">
@@ -54,7 +58,7 @@ function Cart() {
       <Grid container spacing={4} display="flex" justifyContent="space-between">
         <Grid item xs={12} md={8}>
           <Stack spacing={2}>
-            {CART_ITEMS.map((item) => (
+            {cartItems.map((item) => (
               <Card key={item.id} sx={{ borderRadius: 3 }}>
                 <CardContent
                   sx={{ display: "flex", alignItems: "center", gap: 2 }}
@@ -63,49 +67,16 @@ function Cart() {
 
                   <Box>
                     <Typography variant="subtitle1" fontWeight="bold">
-                      {item.name}
+                      {item.service_name}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      {item.details}
-                    </Typography>
-                    <Typography
-                      variant="subtitle1"
-                      fontWeight="bold"
-                      sx={{ mt: 1 }}
-                    >
-                      ₹{item.price.toLocaleString()}
+                      {item.service_description}
                     </Typography>
                   </Box>
-
-                  <Stack>
-                    <IconButton size="small" color="error">
-                      <DeleteOutlineIcon fontSize="small" />
-                    </IconButton>
-
-                    <Stack direction="row" alignItems="center" spacing={1}>
-                      <IconButton
-                        size="small"
-                        sx={{ border: "1px solid #ddd" }}
-                      >
-                        <RemoveIcon fontSize="small" />
-                      </IconButton>
-                      <Typography>{item.quantity}</Typography>
-                      <IconButton
-                        size="small"
-                        sx={{ border: "1px solid #ddd" }}
-                      >
-                        <AddIcon fontSize="small" />
-                      </IconButton>
-                    </Stack>
-                  </Stack>
                 </CardContent>
               </Card>
             ))}
           </Stack>
-        </Grid>
-
-        <Grid item xs={12} md={4}>
-          <DisscountCode />
         </Grid>
       </Grid>
     </Box>
@@ -113,3 +84,4 @@ function Cart() {
 }
 
 export default Cart;
+*/

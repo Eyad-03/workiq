@@ -13,13 +13,24 @@ export const getCategoryById = async (category_id) => {
   return result.rows[0];
 };
 
-export const createCategory = async (category_name, description, image_url) => {
+export const createCategory = async ({
+  category_name,
+  category_description,
+  image_url,
+}) => {
   const query =
     "insert into categories (category_name,description,image_url) values($1,$2,$3)";
   const result = await pool.query(query, [
     category_name,
-    description,
+    category_description,
     image_url,
   ]);
   return result.rows[0];
+};
+
+export const deleteCategory = async (catId) => {
+  const query = `delete from categories where category_id = $1`;
+  const result = await pool.query(query, [catId]);
+
+  return result.rows;
 };

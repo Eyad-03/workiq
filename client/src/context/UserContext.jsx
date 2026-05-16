@@ -12,16 +12,16 @@ export const UserProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-const currentUser = async () => {
-  try {
-    const res = await api.get("/auth/me");
-    setUser(res.data.me);
-  } catch (err) {
-    setUser(null);
-  } finally {
-    setLoading(false); // 👈 done loading either way
-  }
-};
+  const currentUser = async () => {
+    try {
+      const res = await api.get("/auth/me");
+      setUser(res.data.me);
+    } catch (err) {
+      setUser(null);
+    } finally {
+      setLoading(false); // 👈 done loading either way
+    }
+  };
   useEffect(() => {
     currentUser();
   }, []);
@@ -39,7 +39,7 @@ const currentUser = async () => {
       }
 
       toast.success(res.data.message);
-      await currentUser()
+      await currentUser();
       if (res.data.user.role === "provider") navigate("/provider/profile");
       if (res.data.user.role === "user") navigate("/");
       if (res.data.user.role === "admin") navigate("/edit");
@@ -48,9 +48,21 @@ const currentUser = async () => {
     }
   };
 
+  const logout = async () => {
+    try {
+      await api.post("/logout");
+      setUser(null);
+      toast.success("Logged out");
+      navigate("/");
+    } catch (err) {
+      console.log(err);
+      toast.error("Logout failed");
+    }
+  };
+
   return (
     <>
-      <UserContext.Provider value={{ currentUser, login,user,loading }}>
+      <UserContext.Provider value={{ currentUser, login, user, loading,logout }}>
         {children}
       </UserContext.Provider>
     </>

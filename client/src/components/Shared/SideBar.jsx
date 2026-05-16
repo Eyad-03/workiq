@@ -36,25 +36,19 @@ const adminItems = [
 
 const providerItems = [
   { id: 1, text: "Services", icon: <Build />, path: "/service/provider" },
+  { id: 1, text: "Request", icon: <GroupIcon />, path: "/request/provider" },
 
 ];
 
 function SideBar() {
-  const { user, loading } = useContext(UserContext);
+  const { user, loading,logout } = useContext(UserContext);
   const navigate = useNavigate();
 
-  // 1. Handle Loading State
-  if (loading) {
-    return (
-      <Box sx={{ width: 280, bgcolor: "#001e32", minHeight: "100vh", display: 'flex', justifyContent: 'center', pt: 10 }}>
-        <CircularProgress color="inherit" />
-      </Box>
-    );
-  }
-
-  // 2. Handle No User State
-  if (!user) return null;
-  console.log(user)
+  const handleLogoutClick = () => {
+    
+    logout(); 
+  
+  };
 
   return (
     <Box
@@ -145,6 +139,7 @@ function SideBar() {
 
         <ListItem disablePadding>
           <ListItemButton
+          onClick={handleLogoutClick}
             sx={{
               borderRadius: "8px",
               bgcolor: 'rgba(255, 255, 255, 0.1)',

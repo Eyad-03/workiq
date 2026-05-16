@@ -25,12 +25,14 @@ import {
 } from "@mui/icons-material";
 import NavBar from "../../components/Shared/NavBar";
 import api from "../../api";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
-
+import { UserContext } from "../../context/UserContext";
+import { RequestContext } from "../../context/RequestContext";
 export default function ServiceDetailPage() {
   const [service, setService] = useState({});
+  const { addRequest } = useContext(RequestContext);
 
   const { serviceId } = useParams();
 
@@ -78,7 +80,7 @@ export default function ServiceDetailPage() {
 
   const fetchService = async () => {
     try {
-      const res =await api.get(`/service/${serviceId}`);
+      const res = await api.get(`/service/${serviceId}`);
       setService(res.data.service);
       console.log(res.data.service);
     } catch (err) {
@@ -148,8 +150,8 @@ export default function ServiceDetailPage() {
                     sx={{
                       color: "#fff",
                       fontWeight: 900,
-                      width:'100%',
-                      maxWidth:'500px',
+                      width: "100%",
+                      maxWidth: "500px",
                       lineHeight: 1.1,
                       mb: 3,
                       fontSize: {
@@ -258,6 +260,7 @@ export default function ServiceDetailPage() {
                       </Button>
 
                       <Button
+                        onClick={() => addRequest(service)}
                         variant="outlined"
                         sx={{
                           px: 4,
@@ -267,7 +270,7 @@ export default function ServiceDetailPage() {
                           borderColor: "rgba(255,255,255,0.3)",
                         }}
                       >
-                        Contact
+                        Add Cart
                       </Button>
                     </Stack>
                   </Stack>
@@ -297,11 +300,11 @@ export default function ServiceDetailPage() {
 
                   <Box textAlign="center">
                     <Typography variant="h5" fontWeight={800}>
-                      Alex Chen
+                      {service.first_name} {service.last_name}
                     </Typography>
 
                     <Typography color="text.secondary">
-                      Senior Full-Stack Developer
+                      {service.specialized}
                     </Typography>
                   </Box>
 
@@ -314,14 +317,18 @@ export default function ServiceDetailPage() {
                     </Box>
 
                     <Box textAlign="center">
-                      <Typography fontWeight={900}>120+</Typography>
+                      <Typography fontWeight={900}>
+                        {service.project_number}
+                      </Typography>
                       <Typography variant="body2" color="text.secondary">
                         Projects
                       </Typography>
                     </Box>
 
                     <Box textAlign="center">
-                      <Typography fontWeight={900}>5 Years</Typography>
+                      <Typography fontWeight={900}>
+                        {service.experience}
+                      </Typography>
                       <Typography variant="body2" color="text.secondary">
                         Experience
                       </Typography>
@@ -333,22 +340,20 @@ export default function ServiceDetailPage() {
                   <Stack spacing={2} width="100%">
                     <Stack direction="row" spacing={2} alignItems="center">
                       <Email color="primary" />
-                      <Typography variant="body2">
-                        alexchen@gmail.com
-                      </Typography>
+                      <Typography variant="body2">{service.email}</Typography>
                     </Stack>
 
                     <Stack direction="row" spacing={2} alignItems="center">
                       <Language color="primary" />
                       <Typography variant="body2">
-                        www.alexportfolio.com
+                        {service.portfolio}
                       </Typography>
                     </Stack>
 
                     <Stack direction="row" spacing={2} alignItems="center">
                       <LocationOn color="primary" />
                       <Typography variant="body2">
-                        San Francisco, USA
+                        {service.country}, {service.city}
                       </Typography>
                     </Stack>
                   </Stack>

@@ -42,11 +42,11 @@ function ServicesPage() {
   const [services, setServices] = useState([]);
   const navigate = useNavigate();
 
-  const {catId} =useParams()
+  const {catName} =useParams()
 
   const fetchAllServices = async () => {
     try {
-      const res = await api.get(`/servicesByCategory/${catId}`);
+      const res = await api.get(`/servicesByCategory/${catName}`);
       setServices(res.data.services);
       console.log(res.data.services)
     } catch (err) {

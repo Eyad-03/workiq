@@ -24,10 +24,10 @@ export const getAllServiceController = async (req, res) => {
 };
 
 export const getServicesByCategoryController = async (req, res) => {
-  const { catId } = req.params;
+  const { catName } = req.params;
 
   try {
-    const services = await getServicesByCategory(catId);
+    const services = await getServicesByCategory(catName);
 
     if (!services || services.length === 0) {
       return res

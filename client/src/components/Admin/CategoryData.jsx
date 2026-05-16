@@ -27,6 +27,7 @@ import {
 } from "@mui/icons-material";
 import api from "../../api";
 import toast from "react-hot-toast";
+import AddCategory from "./AddCategory";
 
 const categoryColors = [
   { bg: "#fdf4ff", color: "#9333ea", avatar: "linear-gradient(135deg, #f3e8ff, #e9d5ff)" },
@@ -379,7 +380,7 @@ const [open, setOpen] = useState(false);
         </TableContainer>
       </Paper>
 
-      <CategoryData open={open} onSetOpen={setOpen}/>
+      <AddCategory open={open} onSetOpen={setOpen}/>
     </Box>
   );
 };

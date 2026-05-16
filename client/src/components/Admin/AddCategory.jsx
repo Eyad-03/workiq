@@ -15,70 +15,24 @@ import toast from "react-hot-toast";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../context/UserContext";
 
-function AddService({ open, onSetOpen }) {
+function AddCategory({ open, onSetOpen }) {
   const { user, loading } = useContext(UserContext);
   const [categories, setCategories] = useState([]);
   console.log(user);
 
-  const [newService, setNewService] = useState({
-    service_name: "",
+  const [newCategory, setNewCategory] = useState({
     category_name: "",
-    service_description: "",
-    service_image: "",
-    provider_name: user.name,
-    provider_id: user.role ==='admin' ? null:user.userid,
-    starting_price: '',
+    category_description: "",
+    image_url: "",
   });
 
-  useEffect(() => {
-    if (user) {
-      setNewService((prev) => ({
-        ...prev,
-        provider_name: user.name,
-        provider_id: user.userid,
-      }));
-    }
-  }, [user]);
-
-  const fetchAllCategory = async () => {
-    try {
-      const res = await api.get("/categories");
-      if (res.status !== 200) {
-        toast.error(res.data.message);
-      }
-      setCategories(res.data.categories);
-      console.log(res.data.categories);
-      toast.success(res.data.message);
-    } catch (err) {
-      console.error(err.message);
-    }
-  };
-
-  useEffect(function () {
-    fetchAllCategory();
-  }, []);
-
+ 
   const handleSubmit = async () => {
     try {
-      const res = await api.post("/create/service", newService);
+      const res = await api.post("/create/category", newCategory);
       if (res.status !== 201) {
         toast.error(res.data.message);
       }
-      toast.success(res.data.message);
-      
-    } catch (err) {
-      console.error(err.message);
-    }
-  };
-
-  const handlAddService = async () => {
-    try {
-      const res = await api.post("", newService);
-
-      if (res.status !== 201) {
-        toast.error(res.data.message);
-      }
-
       toast.success(res.data.message);
     } catch (err) {
       console.error(err.message);
@@ -98,71 +52,36 @@ function AddService({ open, onSetOpen }) {
       }}
     >
       <DialogTitle sx={{ fontWeight: 800, color: "#0f172a" }}>
-        Add New Service
+        Add New Category
       </DialogTitle>
 
       <DialogContent>
         <Stack spacing={3} sx={{ mt: 1 }} k>
           <TextField
             fullWidth
-            label="Service Name"
+            label="Category Name"
             onChange={(e) =>
-              setNewService({ ...newService, service_name: e.target.value })
+              setNewCategory({ ...newCategory, category_name: e.target.value })
             }
           />
-          <TextField
-            fullWidth
-            select
-            label="Category"
-            onChange={(e) =>
-              setNewService({ ...newService, category_name: e.target.value })
-            }
-          >
-            {categories.map((option) => (
-              <MenuItem key={option.category_id} value={option.category_name}>
-                {option.category_name}
-              </MenuItem>
-            ))}
-          </TextField>
+
           <TextField
             fullWidth
             label="URL image"
             onChange={(e) =>
-              setNewService({ ...newService, service_image: e.target.value })
+              setNewCategory({ ...newCategory, image_url: e.target.value })
             }
           />
-
-          <TextField
-            onChange={(e) =>
-              setNewService({ ...newService, starting_price: e.target.value })
-            }
-            fullWidth
-            type="number"
-            label="Starting Price"
-            InputProps={{ startAdornment: <Box sx={{ mr: 1 }}>$</Box> }}
-          />
-
-            {user.role==='admin' &&
-
-              <TextField
-              onChange={(e) =>
-                setNewService({ ...newService, provider_id: e.target.value })
-              }
-              fullWidth
-              label="Provider id"
-              
-              />
-            }
 
           <TextareaAutosize
             minRows={4}
             maxRows={8}
             fullWidth
-            placeholder="write service description"
+            placeholder="Write Category description"
             onChange={(e) =>
-              setNewService({
-                ...newService,
-                service_description: e.target.value,
+              setNewCategory({
+                ...newCategory,
+                category_description: e.target.value,
               })
             }
           />
@@ -192,4 +111,4 @@ function AddService({ open, onSetOpen }) {
   );
 }
 
-export default AddService;
+export default AddCategory;

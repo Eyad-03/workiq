@@ -4,7 +4,6 @@ import Register from "./pages/Auth/Register";
 import Login from "./pages/Auth/Login";
 import UserProfile from "./pages/User/UserProfile";
 import Payment from "./pages/User/Payment";
-import Cart from "./pages/User/Cart";
 import Home from "./pages/User/Home";
 import ServicesPage from "./pages/User/ServicesPage";
 import Test from "./pages/User/test";
@@ -18,6 +17,9 @@ import UserData from "./components/Admin/UserData";
 import ServiceData from './components/Admin/ServiceData'
 import ServiceProvider from './components/provider/ServiceProvider'
 import CategoryData from "./components/Admin/CategoryData";
+import Requsts from "./pages/User/Requests";
+import RequestDetail from "./pages/User/RequestDetail";
+import RequestProvider from "./components/provider/RequestProvider";
 
 function App() {
   return (
@@ -29,8 +31,9 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/user/profile" element={<UserProfile />} />
             <Route path="/payment" element={<Payment />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/services/:catId" element={<ServicesPage />} />
+            <Route path="/request" element={<Requsts />} />
+            <Route path="/request/detail/:requestid" element={< RequestDetail/>} />
+            <Route path="/services/:catName" element={<ServicesPage />} />
             <Route path="/test" element={<Test />} />
             <Route path="/service/detail/:serviceId" element={<ServiceDetailPage />} />
           </Route>
@@ -51,6 +54,7 @@ function App() {
           <Route element={<DashBoard />}>
             <Route path="/edit" element={<Edit />} />
             <Route path="/provider/profile" element={<ProviderProfile/>}/>
+            <Route path="/request/provider" element={<RequestProvider/>}/>
             <Route path="/service/provider" element={<ServiceProvider/>}/>
           </Route>
         </Routes>
