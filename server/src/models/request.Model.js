@@ -28,7 +28,7 @@ left join services s
 on s.service_id = r.service_id
 left join users u
 on r.provider_id=u.userid
-where r.consumer_id = $1`;
+where r.consumer_id = $1 and r.status != 'Cancelled' `;
 
   const result = await pool.query(query, [consumer_id]);
 
@@ -45,14 +45,12 @@ s.starting_price,
 r.created_at::date as created_date,
 s.service_description,
 u.name,
-p.specialized
+u.email
 from requests r
 left join services s
 on s.service_id = r.service_id
 left join users u
-on r.provider_id=u.userid
-left join provider_profile p
-on r.provider_id=user_id
+on u.userid=r.consumer_id
 where r.requestid = $1`;
 
   const result = await pool.query(query, [requestid]);
@@ -78,3 +76,11 @@ on u.userid=r.consumer_id where r.provider_id = $1`;
   const result = await pool.query(query, [providerId]);
   return result.rows;
 };
+
+export const changeStatus = async (status,note, requestid) => {
+  const query = `update requests set status = $1, note=$2 where requestid=$3`;
+  const result = await pool.query(query, [status,note ,requestid]);
+  return result.rows[0]
+};
+
+

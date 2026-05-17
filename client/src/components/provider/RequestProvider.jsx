@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
   Table,
   TableBody,
@@ -17,6 +17,9 @@ import {
   IconButton,
   Tooltip,
   LinearProgress,
+  FormControl,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import {
   Search as SearchIcon,
@@ -26,10 +29,14 @@ import {
   Person,
   Email,
   EditNote,
+  HourglassEmpty,
+  NotificationsActive,
+  CheckCircle,
+  Cancel,
 } from "@mui/icons-material";
-import { useContext } from "react";
 import { UserContext } from "../../context/UserContext";
 import { RequestContext } from "../../context/RequestContext";
+import DialogProvider from "./DialogProvider";
 
 const categoryColors = {
   default: { bg: "#f0fdf4", color: "#15803d", dot: "#22c55e" },
@@ -43,84 +50,57 @@ const categoryColors = {
 const getCategoryStyle = (name) =>
   categoryColors[name] || categoryColors.default;
 
-// --- STATIC DATA ADDED HERE ---
-const STATIC_REQUESTS = [
-  {
-    service_id: 1,
-    service_name: "E-Commerce Website Development",
-    category_name: "Development",
-    customer_name: "Alex Johnson",
-    customer_email: "alex.j@example.com",
-    starting_price: 2500,
-    date: "2026-05-12",
-    image: "",
+const STATUS_CONFIG = {
+  Pending: {
+    label: "Pending",
+    color: "#f59e0b",
+    bg: "#fef3c7",
+    icon: <HourglassEmpty sx={{ fontSize: 14 }} />,
   },
-  {
-    service_id: 2,
-    service_name: "Brand Identity & Logo Kit",
-    category_name: "Graphic & Design",
-    customer_name: "Sarah Miller",
-    customer_email: "s.miller@designstudio.com",
-    starting_price: 850,
-    date: "2026-05-14",
-    image: "",
+  "In Progress": {
+    label: "In Progress",
+    color: "#3b82f6",
+    bg: "#dbeafe",
+    icon: <NotificationsActive sx={{ fontSize: 14 }} />,
   },
-  {
-    service_id: 3,
-    service_name: "3D Character Explainer Video",
-    category_name: "Cartoon Animation",
-    customer_name: "David Lee",
-    customer_email: "dlee@animco.io",
-    starting_price: 4200,
-    date: "2026-05-15",
-    image: "",
+  Completed: {
+    label: "Completed",
+    color: "#10b981",
+    bg: "#d1fae5",
+    icon: <CheckCircle sx={{ fontSize: 14 }} />,
   },
-  {
-    service_id: 4,
-    service_name: "SaaS Product Launch Campaign",
-    category_name: "Marketing",
-    customer_name: "Emma Watson",
-    customer_email: "emma@growthly.com",
-    starting_price: 1800,
-    date: "2026-05-16",
-    image: "",
+  Cancelled: {
+    label: "Cancelled",
+    color: "#ef4444",
+    bg: "#fee2e2",
+    icon: <Cancel sx={{ fontSize: 14 }} />,
   },
-  {
-    service_id: 5,
-    service_name: "Custom Vector Illustrations",
-    category_name: "Illustration",
-    customer_name: "Michael Chang",
-    customer_email: "m.chang@artspace.net",
-    starting_price: 450,
-    date: "2026-05-16",
-    image: "",
-  },
-];
+};
 
-function RequestProvider() {
-  // Initializing state with static data
-  
+function RequestProvider({ handleClose }) {
   const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All"); // <-- NEW: Filter state
   const [loading, setLoading] = useState(false);
   const [hoveredRow, setHoveredRow] = useState(null);
   const [open, setOpen] = useState(false);
+  
   const { user } = useContext(UserContext);
-  const { fetchRequestByProviderId,requestProvider } = useContext(RequestContext);
+  const { fetchRequestByProviderId, requestProvider = [] } = useContext(RequestContext);
+  const [selectedRequest, setSelectedRequest] = useState(null);
 
-  const filtered = requestProvider.filter((s) =>
-    s.service_name?.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
+  // --- FILTER LOGIC ---
+  // Filters by search input AND status drop-down selection
+  const filtered = requestProvider.filter((s) => {
+    const matchesSearch = s.service_name?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = statusFilter === "All" || s.status === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
 
-  const maxPrice = Math.max(...requestProvider.map((s) => s.starting_price || 0), 1);
-
-  useEffect(
-    function () {
-      if (user) {
-        fetchRequestByProviderId(user.userid);
-      }
-    },
-    [user],
-  );
+  useEffect(() => {
+    if (user) {
+      fetchRequestByProviderId(user.userid);
+    }
+  }, [user]);
 
   return (
     <Box
@@ -182,6 +162,7 @@ function RequestProvider() {
             </Box>
 
             <Stack direction="row" spacing={1.5} alignItems="center">
+              {/* Search Bar */}
               <Box
                 sx={{
                   display: "flex",
@@ -202,26 +183,56 @@ function RequestProvider() {
                 <SearchIcon sx={{ color: "#94a3b8", fontSize: 18, mr: 1 }} />
                 <InputBase
                   placeholder="Search services..."
-                  sx={{ fontSize: "0.85rem", width: 180 }}
+                  sx={{ fontSize: "0.85rem", width: 150 }}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </Box>
 
-              <IconButton
-                sx={{
-                  border: "1px solid #e2e8f0",
-                  borderRadius: "12px",
-                  p: 1,
-                  color: "#64748b",
-                  "&:hover": { background: "#f1f5f9" },
-                }}
-              >
-                <FilterIcon fontSize="small" />
-              </IconButton>
+              {/* NEW: Status Filter Dropdown */}
+              <FormControl size="small" sx={{ minWidth: 130 }}>
+                <Select
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                  displayEmpty
+                  inputProps={{ "aria-label": "Status Filter" }}
+                  IconComponent={FilterIcon}
+                  sx={{
+                    borderRadius: "12px",
+                    bgcolor: "#f1f5f9",
+                    fontSize: "0.85rem",
+                    fontWeight: 600,
+                    color: "#64748b",
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#e2e8f0",
+                    },
+                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#cbd5e1",
+                    },
+                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#6366f1",
+                    },
+                    "& .MuiSelect-icon": {
+                      fontSize: "1.1rem",
+                      right: "8px",
+                      color: "#64748b"
+                    }
+                  }}
+                >
+                  <MenuItem value="All" sx={{ fontSize: "0.85rem", fontWeight: 600 }}>All Statuses</MenuItem>
+                  {Object.keys(STATUS_CONFIG).map((statusKey) => (
+                    <MenuItem 
+                      key={statusKey} 
+                      value={statusKey}
+                      sx={{ fontSize: "0.85rem", fontWeight: 500 }}
+                    >
+                      {statusKey}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
 
               <Button
                 variant="contained"
-                onClick={() => setOpen(!open)}
                 startIcon={<AddIcon />}
                 sx={{
                   background: "linear-gradient(135deg, #6366f1, #818cf8)",
@@ -264,7 +275,7 @@ function RequestProvider() {
                   "Date",
                   "Status",
                   "Actions",
-                ].map((h, i) => (
+                ].map((h) => (
                   <TableCell
                     key={h}
                     align={h === "Status" ? "center" : "left"}
@@ -285,9 +296,16 @@ function RequestProvider() {
             </TableHead>
 
             <TableBody>
-              {filtered.map((request, idx) => {
+              {filtered.map((request) => {
                 const catStyle = getCategoryStyle(request.category_name);
                 const isHovered = hoveredRow === request.service_id;
+                
+                // Fallback style object if status is undefined or unexpected
+                const statusColor = STATUS_CONFIG[request.status] || {
+                  bg: "#f1f5f9",
+                  color: "#64748b",
+                  icon: null
+                };
 
                 return (
                   <TableRow
@@ -306,7 +324,6 @@ function RequestProvider() {
                       <Stack direction="row" spacing={2} alignItems="center">
                         <Box sx={{ position: "relative" }}>
                           <Avatar
-                            
                             variant="rounded"
                             sx={{
                               width: 48,
@@ -362,7 +379,7 @@ function RequestProvider() {
                               mt: 0.3,
                             }}
                           >
-                            SER-{request.service_id.toString().padStart(3, "0")}
+                            SER-{request.service_id?.toString().padStart(3, "0")}
                           </Typography>
                         </Box>
                       </Stack>
@@ -387,17 +404,9 @@ function RequestProvider() {
 
                     {/* Customer */}
                     <TableCell>
-                      <Box
-                        sx={{ display: "flex", alignItems: "center", gap: 1 }}
-                      >
+                      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                         <Box>
-                          <Box
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 0.5,
-                            }}
-                          >
+                          <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
                             <Person sx={{ fontSize: 13, color: "#94a3b8" }} />
                             <Typography
                               sx={{
@@ -406,23 +415,14 @@ function RequestProvider() {
                                 color: "#1e293b",
                               }}
                             >
-                              {/* FIXED: Placed customer data here */}
                               {request.name}
                             </Typography>
                           </Box>
-                          <Box
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 0.5,
-                              mt: 0.3,
-                            }}
-                          >
+                          <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, mt: 0.3 }}>
                             <Email sx={{ fontSize: 12, color: "#94a3b8" }} />
                             <Typography
                               sx={{ fontSize: "0.72rem", color: "#64748b" }}
                             >
-                              {/* FIXED: Placed email data here */}
                               {request.email}
                             </Typography>
                           </Box>
@@ -433,11 +433,7 @@ function RequestProvider() {
                     {/* Price */}
                     <TableCell sx={{ minWidth: 120 }}>
                       <Box>
-                        <Stack
-                          direction="row"
-                          alignItems="center"
-                          spacing={0.8}
-                        >
+                        <Stack direction="row" alignItems="center" spacing={0.8}>
                           <Typography
                             sx={{
                               fontWeight: 800,
@@ -445,7 +441,7 @@ function RequestProvider() {
                               fontSize: "1rem",
                             }}
                           >
-                            ${request.starting_price.toLocaleString()}
+                            ${request.starting_price?.toLocaleString()}
                           </Typography>
                           <Box
                             sx={{
@@ -458,9 +454,7 @@ function RequestProvider() {
                               borderRadius: "6px",
                             }}
                           >
-                            <TrendIcon
-                              sx={{ fontSize: 12, color: "#16a34a" }}
-                            />
+                            <TrendIcon sx={{ fontSize: 12, color: "#16a34a" }} />
                             <Typography
                               sx={{
                                 fontSize: "0.68rem",
@@ -478,7 +472,6 @@ function RequestProvider() {
                     {/* Date */}
                     <TableCell>
                       <Typography sx={{ fontSize: "0.8rem", color: "#64748b" }}>
-                        {/* FIXED: changed req.date to service.date */}
                         {request.created_at}
                       </Typography>
                     </TableCell>
@@ -490,30 +483,27 @@ function RequestProvider() {
                           display: "inline-flex",
                           alignItems: "center",
                           gap: 0.8,
-                          background: "#f0fdf4",
-                          border: "1px solid #bbf7d0",
+                          bgcolor: statusColor.bg,
+                          border: `1px solid ${statusColor.color}44`,
                           borderRadius: "8px",
-                          px: 1.2,
+                          px: 1,
                           py: 0.5,
+                          maxWidth: "115px",
+                          width: "100%",
+                          justifyContent: "center"
                         }}
                       >
-                        <Box
-                          sx={{
-                            width: 7,
-                            height: 7,
-                            borderRadius: "50%",
-                            background: "#22c55e",
-                            boxShadow: "0 0 0 2px #86efac",
-                          }}
-                        />
                         <Typography
                           sx={{
                             fontSize: "0.78rem",
                             fontWeight: 700,
-                            color: "#16a34a",
+                            color: statusColor.color,
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 0.5,
                           }}
                         >
-                          {request.status}
+                          {statusColor.icon} {request.status}
                         </Typography>
                       </Box>
                     </TableCell>
@@ -523,6 +513,10 @@ function RequestProvider() {
                       <Box sx={{ display: "flex", gap: 0.5 }}>
                         <Tooltip title="View & Edit Request">
                           <IconButton
+                            onClick={() => {
+                              setOpen(!open);
+                              setSelectedRequest(request.requestid);
+                            }}
                             size="small"
                             sx={{
                               color: "#6366f1",
@@ -546,7 +540,7 @@ function RequestProvider() {
                 <TableRow>
                   <TableCell colSpan={7} align="center" sx={{ py: 6 }}>
                     <Typography sx={{ color: "#94a3b8", fontWeight: 600 }}>
-                      No services found
+                      No services found matching current filters
                     </Typography>
                   </TableCell>
                 </TableRow>
@@ -555,6 +549,14 @@ function RequestProvider() {
           </Table>
         </TableContainer>
       </Paper>
+
+      {selectedRequest && (
+        <DialogProvider
+          open={open}
+          onSetOpen={setOpen}
+          selectedRequest={selectedRequest}
+        />
+      )}
     </Box>
   );
 }

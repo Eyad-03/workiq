@@ -3,7 +3,8 @@ import {
   createRequest,
   getRequestById,
   getRequestByUserId,
-  getRequestByProviderId
+  getRequestByProviderId,
+  changeStatus,
 } from "../models/request.Model.js";
 import { getServiceByProviderId } from "../models/service.Model.js";
 
@@ -85,6 +86,26 @@ export const getRequestByProviderIdController = async (req, res) => {
     }
 
     return res.status(200).json({ message: "fetch done", requests: requests });
+  } catch (err) {
+    console.error(err.message);
+    return res
+      .status(500)
+      .json({ message: "Internal Server Error", error: err.message });
+  }
+};
+
+export const changeStatusController = async (req, res) => {
+const { status,note } = req.body; // properly destructure 'status' out of the object
+    const { requestid } = req.params;
+
+  const newStatus =await changeStatus(status,note,requestid)
+
+  try {
+    if (newStatus === "Pending") {
+      return res.status(201).json({ message: "status not change" });
+    }
+
+    return res.status(201).json({ message: "status change" });
   } catch (err) {
     console.error(err.message);
     return res

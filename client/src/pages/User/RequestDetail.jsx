@@ -1,8 +1,6 @@
 import {
   Box,
-  Breadcrumbs,
   Typography,
-  Chip,
   Card,
   CardContent,
   Divider,
@@ -11,14 +9,14 @@ import {
   Rating,
   Button,
   Stack,
-  Link,
 } from "@mui/material";
 import {
-  CodeRounded,
   DownloadRounded,
   MessageRounded,
   CloseRounded,
+  PaymentRounded,
 } from "@mui/icons-material";
+import StarIcon from "@mui/icons-material/Star";
 import Timeline from "@mui/lab/Timeline";
 import TimelineItem from "@mui/lab/TimelineItem";
 import TimelineSeparator from "@mui/lab/TimelineSeparator";
@@ -26,10 +24,10 @@ import TimelineConnector from "@mui/lab/TimelineConnector";
 import TimelineContent from "@mui/lab/TimelineContent";
 import TimelineDot from "@mui/lab/TimelineDot";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useParams } from "react-router-dom";
-import { useEffect } from "react";
-import { useContext } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useContext, useState } from "react";
 import { RequestContext } from "../../context/RequestContext";
+import RatingProvider from "../../components/User/RatingProvider";
 
 const theme = createTheme({
   palette: {
@@ -101,57 +99,73 @@ const theme = createTheme({
 
 const statusConfig = {
   pending: { label: "Pending", color: "warning" },
-  inprogress: { label: "In progress", color: "info" },
   approved: { label: "Approved", color: "success" },
+  inprogress: { label: "In progress", color: "info" },
+  completed: { label: "Completed", color: "success" },
   rejected: { label: "Rejected", color: "error" },
 };
 
+// Normalized everything to lowercase value mappings to ensure matches pass consistently
 const timelineSteps = [
   {
     label: "Request submitted",
-    date: "May 12 · 09:14 AM",
-    variant: "filled",
-    color: "success",
+    status: "pending",
+    stepOrder: 1,
   },
   {
     label: "Provider accepted",
-    date: "May 13 · 02:30 PM",
-    variant: "filled",
-    color: "success",
+    status: "approved",
+    stepOrder: 2,
   },
   {
     label: "In progress",
-    date: "Started May 14",
-    variant: "filled",
-    color: "warning",
+    status: "inprogress",
+    stepOrder: 3,
   },
   {
     label: "Delivered",
-    date: "Est. July 4",
-    variant: "outlined",
-    color: "grey",
+    status: "completed",
+    stepOrder: 4,
   },
 ];
 
-
+const statusRank = {
+  pending: 1,
+  approved: 2,
+  inprogress: 3,
+  completed: 4,
+  rejected: 0,
+};
 
 export default function RequestDetail() {
-  const status = "inprogress";
-  const { label, color } = statusConfig[status];
-
   const { requestid } = useParams();
-  const { fetchRequestById,request } = useContext(RequestContext);
+  const { fetchRequestById, request } = useContext(RequestContext);
+  const [open, setOpen] = useState(false);
 
 
-const metaFields = [
-  { label: "Order date", value:"July 4, 2026" },
-  { label: "Estimated delivery", value: "July 4, 2026" },
-  { label: "Duration", value: "6–8 weeks" },
-];
+  const navigate =useNavigate()
 
-  useEffect(function () {
-    fetchRequestById(requestid);
-  }, []);
+  const rawStatus = request?.status
+    ? request.status.toLowerCase().replace(/\s+/g, "")
+    : "pending";
+  const currentRank = statusRank[rawStatus] || 1;
+
+  const metaFields = [
+    { label: "Order date", value: "July 4, 2026" },
+    { label: "Estimated delivery", value: "July 4, 2026" },
+    { label: "Duration", value: "6–8 weeks" },
+  ];
+
+  useEffect(
+    function () {
+      fetchRequestById(requestid);
+    },
+    [requestid],
+  );
+
+  if (!request) {
+    return null; // Ensure content loads safely before execution maps run
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -229,6 +243,7 @@ const metaFields = [
                 ))}
               </Grid>
               <Divider sx={{ my: 2.5 }} />
+
               {/* Price box */}
               <Box
                 sx={{
@@ -238,33 +253,51 @@ const metaFields = [
                   borderRadius: 3,
                   p: "16px 20px",
                   display: "flex",
+                  alignItems:'center',
                   justifyContent: "space-between",
-                  alignItems: "center",
                 }}
               >
                 <Box>
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    fontWeight={500}
+                  <Box>
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      fontWeight={500}
+                    >
+                      Total price
+                    </Typography>
+                  </Box>
+                  <Box
+                    sx={{ display: "flex", alignItems: "baseline", gap: 0.5 }}
                   >
-                    Total price
-                  </Typography>
-
+                    <Typography
+                      sx={{
+                        fontSize: "1.75rem",
+                        fontWeight: 800,
+                        background: "linear-gradient(135deg, #6366F1, #8B5CF6)",
+                        WebkitBackgroundClip: "text",
+                        WebkitTextFillColor: "transparent",
+                      }}
+                    >
+                      ${request.starting_price}
+                    </Typography>
+                  </Box>
                 </Box>
-                <Box sx={{ display: "flex", alignItems: "baseline", gap: 0.5 }}>
-                  <Typography
-                    sx={{
-                      fontSize: "1.75rem",
-                      fontWeight: 800,
-                      background: "linear-gradient(135deg, #6366F1, #8B5CF6)",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                    }}
-                  >
-                    ${request.starting_price}
-                  </Typography>
+                <Box>
+                  {request.status==='Completed' &&
 
+                    <Button
+                    onClick={()=>navigate('/payment')}
+                    variant="contained"
+                    startIcon={<PaymentRounded />}
+                    
+                    sx={{
+                      boxShadow: "0 4px 14px rgba(139,92,246,0.4)",
+                    }}
+                    >
+                    Pay now
+                  </Button>
+                  }
                 </Box>
               </Box>
             </CardContent>
@@ -318,12 +351,33 @@ const metaFields = [
                             "& .MuiRating-iconFilled": { color: "#F59E0B" },
                           }}
                         />
-                        <Typography variant="caption" color="text.secondary">
-                          4.9 (127 reviews)
-                        </Typography>
                       </Box>
                     </Box>
                   </Box>
+
+                  <Stack spacing={2} sx={{ mt: 8 }}>
+                    <Box>
+                      <Button
+                        variant="contained"
+                        startIcon={<MessageRounded />}
+                      >
+                        Message provider
+                      </Button>
+                    </Box>
+
+                    {request.status === "Completed" && (
+                      <Box>
+                        <Button
+                          onClick={() => setOpen(true)}
+                          variant="contained"
+                          sx={{ px: 3.5 }}
+                          startIcon={<StarIcon />}
+                        >
+                          Rating provider
+                        </Button>
+                      </Box>
+                    )}
+                  </Stack>
                 </CardContent>
               </Card>
             </Grid>
@@ -339,85 +393,85 @@ const metaFields = [
                     Order status
                   </Typography>
                   <Timeline sx={{ p: 0, m: 0 }}>
-                    {timelineSteps.map(({ label, date, variant, color }, i) => (
-                      <TimelineItem
-                        key={label}
-                        sx={{
-                          "&:before": { display: "none" },
-                          minHeight: i < timelineSteps.length - 1 ? 58 : "auto",
-                        }}
-                      >
-                        <TimelineSeparator>
-                          <TimelineDot
-                            color={color}
-                            variant={variant}
-                            sx={{
-                              m: "4px 0",
-                              width: 12,
-                              height: 12,
-                              boxShadow:
-                                color !== "grey"
-                                  ? "0 0 0 3px rgba(99,102,241,0.15)"
-                                  : "none",
-                            }}
-                          />
-                          {i < timelineSteps.length - 1 && (
-                            <TimelineConnector
-                              sx={{ bgcolor: "#DDD6FE", width: "1.5px" }}
+                    {timelineSteps.map(({ label, stepOrder }, i) => {
+                      const isCompleted = stepOrder < currentRank;
+                      const isActive = stepOrder === currentRank;
+
+                      let dotColor = "grey";
+                      let dotVariant = "outlined";
+
+                      if (isCompleted) {
+                        dotColor = "success";
+                        dotVariant = "filled";
+                      } else if (isActive) {
+                        dotColor = statusConfig[rawStatus]?.color || "primary";
+                        dotVariant = "filled";
+                      }
+
+                      return (
+                        <TimelineItem
+                          key={label}
+                          sx={{
+                            "&:before": { display: "none" },
+                            minHeight:
+                              i < timelineSteps.length - 1 ? 58 : "auto",
+                          }}
+                        >
+                          <TimelineSeparator>
+                            <TimelineDot
+                              variant={dotVariant}
+                              color={dotColor === "grey" ? undefined : dotColor}
+                              sx={{
+                                m: "4px 0",
+                                width: 12,
+                                height: 12,
+                                backgroundColor:
+                                  dotColor === "grey" ? "#E5E7EB" : undefined,
+                                boxShadow:
+                                  isActive || isCompleted
+                                    ? "0 0 0 3px rgba(99,102,241,0.15)"
+                                    : "none",
+                              }}
                             />
-                          )}
-                        </TimelineSeparator>
-                        <TimelineContent sx={{ pt: 0, pb: 0, pl: 1.5 }}>
-                          <Typography
-                            variant="body2"
-                            fontWeight={600}
-                            color={
-                              color === "grey"
-                                ? "text.disabled"
-                                : "text.primary"
-                            }
-                            fontSize={13}
-                          >
-                            {label}
-                          </Typography>
-                          <Typography variant="caption" color="text.secondary">
-                            {date}
-                          </Typography>
-                        </TimelineContent>
-                      </TimelineItem>
-                    ))}
+                            {i < timelineSteps.length - 1 && (
+                              <TimelineConnector
+                                sx={{
+                                  bgcolor:
+                                    stepOrder < currentRank
+                                      ? "success.main"
+                                      : "#DDD6FE",
+                                  width: "1.5px",
+                                }}
+                              />
+                            )}
+                          </TimelineSeparator>
+                          <TimelineContent sx={{ pt: 0, pb: 0, pl: 1.5 }}>
+                            <Typography
+                              variant="body2"
+                              fontWeight={isActive ? 700 : 600}
+                              color={
+                                isActive
+                                  ? "text.primary"
+                                  : isCompleted
+                                    ? "text.secondary"
+                                    : "text.disabled"
+                              }
+                              fontSize={13}
+                            >
+                              {label}
+                            </Typography>
+                          </TimelineContent>
+                        </TimelineItem>
+                      );
+                    })}
                   </Timeline>
                 </CardContent>
               </Card>
             </Grid>
           </Grid>
-
-          {/* Actions */}
-          <Card>
-            <CardContent sx={{ p: "16px 24px !important" }}>
-              <Stack direction="row" spacing={1.5} flexWrap="wrap" useFlexGap>
-                <Button variant="contained" startIcon={<MessageRounded />}>
-                  Message provider
-                </Button>
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  startIcon={<DownloadRounded />}
-                  sx={{ borderColor: "#DDD6FE", color: "primary.main" }}
-                >
-                  Download invoice
-                </Button>
-                <Button
-                  variant="outlined"
-                  color="error"
-                  startIcon={<CloseRounded />}
-                >
-                  Cancel request
-                </Button>
-              </Stack>
-            </CardContent>
-          </Card>
         </Box>
+
+        <RatingProvider open={open} onSetOpen={setOpen} />
       </Box>
     </ThemeProvider>
   );

@@ -192,6 +192,7 @@ function NavBar() {
               }}
             >
               <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
+              <MenuItem onClick={()=>navigate('/review')}>Review</MenuItem>
               <MenuItem onClick={handleLogoutClick} sx={{ color: "error.main" }}>
                 Logout
               </MenuItem>

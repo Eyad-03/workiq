@@ -20,6 +20,7 @@ import CategoryData from "./components/Admin/CategoryData";
 import Requsts from "./pages/User/Requests";
 import RequestDetail from "./pages/User/RequestDetail";
 import RequestProvider from "./components/provider/RequestProvider";
+import Review from "./pages/User/Review";
 
 function App() {
   return (
@@ -31,6 +32,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/user/profile" element={<UserProfile />} />
             <Route path="/payment" element={<Payment />} />
+            <Route path="/review" element={<Review />} />
+
             <Route path="/request" element={<Requsts />} />
             <Route path="/request/detail/:requestid" element={< RequestDetail/>} />
             <Route path="/services/:catName" element={<ServicesPage />} />

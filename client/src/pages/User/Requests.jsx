@@ -107,7 +107,7 @@ useEffect(() => {
                       {/* Styled Status Tag */}
                       <Box sx={{ mt: 1 }}>
                         <Chip
-                          label="Pending"
+                          label={item.status}
                           size="small"
                           sx={{
                             backgroundColor: "#feebc8",

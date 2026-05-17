@@ -9,7 +9,7 @@ export const RequestContext = createContext();
 export const RequestProvider = ({ children }) => {
   const [requestUser, setRequestUser] = useState([]);
   const [request, setRequest] = useState({});
-  const [requestProvider,setRequestProvider] = useState([])
+  const [requestProvider, setRequestProvider] = useState([]);
   const { user, loading } = useContext(UserContext);
 
   const addRequest = async (service) => {
@@ -63,6 +63,16 @@ export const RequestProvider = ({ children }) => {
     }
   };
 
+  const changeStatus = async (status,note,requestid) => {
+    try {
+      const res = await api.put(`/change/status/${requestid}`, { status,note });
+      
+      toast.success(res.data.message);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+
   return (
     <RequestContext.Provider
       value={{
@@ -73,7 +83,8 @@ export const RequestProvider = ({ children }) => {
         fetchRequestById,
         request,
         fetchRequestByProviderId,
-        requestProvider
+        requestProvider,
+        changeStatus
       }}
     >
       {children}
